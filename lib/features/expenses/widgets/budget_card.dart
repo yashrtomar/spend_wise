@@ -6,12 +6,12 @@ import 'package:spend_wise/theme/app_typography.dart';
 
 class BudgetCard extends StatelessWidget {
   final double budget;
-  final double remaining;
+  final double spent;
 
   const BudgetCard({
     super.key,
     required this.budget,
-    required this.remaining,
+    required this.spent,
   });
 
   Color _progressColor(AppThemeColors colors, double percentage) {
@@ -25,7 +25,9 @@ class BudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    final spent = budget - remaining;
+    final isOverBudget = spent > budget;
+    final overBudgetAmount = spent - budget;
+    final remaining = isOverBudget ? 0.0 : budget - spent;
 
     final progress =
         budget <= 0 ? 0.0 : (spent / budget).clamp(0.0, 1.0);
@@ -56,7 +58,7 @@ class BudgetCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
 
           Text(
-            "\$${budget.toStringAsFixed(0)}",
+            budget.toStringAsFixed(0),
             style: AppTypography.lg.copyWith(
               color: colors.white,
               fontWeight: FontWeight.bold,
@@ -83,14 +85,16 @@ class BudgetCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Remaining Balance",
+                isOverBudget ? "Over Budget by" : "Remaining Balance",
                 style: AppTypography.xs.copyWith(
                   color: colors.white,
                 ),
               ),
 
               Text(
-                "\$${remaining.toStringAsFixed(0)} / \$${budget.toStringAsFixed(0)}",
+                isOverBudget 
+                    ? overBudgetAmount.toStringAsFixed(0)
+                    : "${remaining.toStringAsFixed(0)} / ${budget.toStringAsFixed(0)}",
                 style: AppTypography.xs.copyWith(
                   color: colors.white,
                   fontWeight: FontWeight.w600,

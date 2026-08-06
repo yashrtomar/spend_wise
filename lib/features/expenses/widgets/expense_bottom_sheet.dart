@@ -264,21 +264,34 @@ class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
                   onFieldSubmitted: (_) => _save(),
                 ),
                 const SizedBox(height: 28),
-                PrimaryButton(
-                  title: _isLoading ? "Saving..." : (widget.expense == null ? "Save Expense" : "Update Expense"),
-                  onPressed: _isLoading ? () {} : _save,
-                  height: 48,
-                ),
-                if (widget.expense != null && widget.expense!.id != null) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  DangerButton(
-                    title: _isLoading ? "Processing..." : "Delete Expense",
-                    icon: FontAwesomeIcons.trashCan,
-                    isLoading: _isLoading,
-                    onPressed: _delete,
+                if (widget.expense == null)
+                  PrimaryButton(
+                    title: _isLoading ? "Saving..." : "Save Expense",
+                    onPressed: _isLoading ? () {} : _save,
                     height: 48,
+                  )
+                else
+                  Row(
+                    spacing: AppSpacing.sm,
+                    children: [
+                      Expanded(
+                        child: DangerButton(
+                          title: _isLoading ? "Wait..." : "Delete",
+                          icon: FontAwesomeIcons.trashCan,
+                          isLoading: _isLoading,
+                          onPressed: _delete,
+                          height: 48,
+                        ),
+                      ),
+                      Expanded(
+                        child: PrimaryButton(
+                          title: _isLoading ? "Saving..." : "Update",
+                          onPressed: _isLoading ? () {} : _save,
+                          height: 48,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
               ],
             ),
           ),

@@ -66,7 +66,7 @@ class ExpenseListItem extends ConsumerWidget {
                   spacing: AppSpacing.sm,
                   children: [
                     Text(
-                      "\$${expense.amount.toStringAsFixed(2)}",
+                      expense.amount.toStringAsFixed(2),
                       style: AppTypography.base.copyWith(
                         color: colors.textPrimary,
                         fontWeight: FontWeight.bold,

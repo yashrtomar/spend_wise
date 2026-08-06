@@ -8,6 +8,7 @@ import 'package:spend_wise/features/expenses/widgets/expense_list.dart';
 import 'package:spend_wise/features/expenses/widgets/expense_list_item.dart';
 import 'package:spend_wise/features/expenses/widgets/greet_header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spend_wise/features/profile/providers/profile_provider.dart';
 import 'package:spend_wise/features/expenses/providers/categories_provider.dart';
 import 'package:spend_wise/features/expenses/providers/expenses_provider.dart';
 import 'package:spend_wise/models/expense.dart';
@@ -41,20 +42,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // temporary
-    const budget = 5000.0;
-    const remaining = 3250.0;
     final colors = context.colors;
     final expensesAsync = ref.watch(expensesProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
+    final profileAsync = ref.watch(profileProvider);
 
     final isInitialLoading = (expensesAsync.isLoading && !expensesAsync.hasValue) ||
-        (categoriesAsync.isLoading && !categoriesAsync.hasValue);
+        (categoriesAsync.isLoading && !categoriesAsync.hasValue) ||
+        (profileAsync.isLoading && !profileAsync.hasValue);
+    
     final hasError = (expensesAsync.hasError && !expensesAsync.hasValue) ||
-        (categoriesAsync.hasError && !categoriesAsync.hasValue);
-    final error = expensesAsync.error ?? categoriesAsync.error;
+        (categoriesAsync.hasError && !categoriesAsync.hasValue) ||
+        (profileAsync.hasError && !profileAsync.hasValue);
+        
+    final error = expensesAsync.error ?? categoriesAsync.error ?? profileAsync.error;
     final expenses = expensesAsync.value ?? [];
     final hasExpenses = expenses.isNotEmpty;
+
+    final budget = profileAsync.value?.monthlyBudget ?? 0.0;
+    final spent = expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + expense.amount,
+    );
+    final userName = profileAsync.value?.name ?? "User";
 
     return Scaffold(
       body: SafeArea(
@@ -68,15 +78,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               await Future.wait([
                 ref.read(expensesProvider.future),
                 ref.read(categoriesProvider.future),
+                ref.read(profileProvider.future),
               ]);
             } catch (_) {}
           },
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: GreetHeader(
-                  name: "Yash",
+                  name: userName,
                 ),
               ),
               const SliverToBoxAdapter(
@@ -85,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 sliver: SliverToBoxAdapter(
-                  child: BudgetCard(budget: budget, remaining: remaining),
+                  child: BudgetCard(budget: budget, spent: spent),
                 ),
               ),
               SliverPadding(
@@ -105,10 +116,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Text("View All"),
-                                SizedBox(width: 4),
-                                Icon(Icons.chevron_right),
+                              children: [
+                                Text("View All", style: TextStyle(color: colors.primary)),
+                                const SizedBox(width: 4),
+                                Icon(Icons.chevron_right, color: colors.primary),
                               ],
                             ),
                           )

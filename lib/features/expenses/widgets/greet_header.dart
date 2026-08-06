@@ -10,7 +10,7 @@ class GreetHeader extends StatelessWidget {
 
   const GreetHeader({
     super.key,
-    this.greeting = "Welcome back",
+    this.greeting = "Greetings",
     required this.name,
     this.trailing,
   });
