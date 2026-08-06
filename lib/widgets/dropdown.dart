@@ -6,18 +6,14 @@ import 'package:spend_wise/theme/app_typography.dart';
 
 class Dropdown<T> extends StatelessWidget {
   final String? label;
-
   final T? value;
-
   final List<DropdownMenuItem<T>> items;
-
   final ValueChanged<T?>? onChanged;
-
   final String? hintText;
-
   final String? Function(T?)? validator;
-
   final bool enabled;
+  final double? menuMaxHeight;
+  final DropdownButtonBuilder? selectedItemBuilder;
 
   const Dropdown({
     super.key,
@@ -28,6 +24,8 @@ class Dropdown<T> extends StatelessWidget {
     this.hintText,
     this.validator,
     this.enabled = true,
+    this.menuMaxHeight = 200.0,
+    this.selectedItemBuilder,
   });
 
   @override
@@ -58,6 +56,9 @@ class Dropdown<T> extends StatelessWidget {
           items: items,
           onChanged: enabled ? onChanged : null,
           validator: validator,
+          selectedItemBuilder: selectedItemBuilder,
+          menuMaxHeight: menuMaxHeight,
+          dropdownColor: colors.backgroundCard,
 
           decoration: InputDecoration(
             hintText: hintText,
@@ -71,7 +72,7 @@ class Dropdown<T> extends StatelessWidget {
 
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
-              vertical: AppSpacing.md,
+              vertical: AppSpacing.sm,
             ),
 
             enabledBorder: OutlineInputBorder(

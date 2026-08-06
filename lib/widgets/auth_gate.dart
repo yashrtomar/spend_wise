@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/screens/login_screen.dart';
-import 'package:spend_wise/features/expenses/screens/home_screen.dart';
+import 'package:spend_wise/features/navigation/screens/main_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthGate extends StatelessWidget {
@@ -19,7 +19,7 @@ class AuthGate extends StatelessWidget {
         print("SESSION: ${snapshot.data?.session}");
 
         if (snapshot.data?.session != null) {
-          return const HomeScreen();
+          return const MainScreen();
         }
 
         return const LoginScreen();

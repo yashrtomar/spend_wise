@@ -10,25 +10,35 @@ class ExpenseList extends StatelessWidget {
   final List<Expense> expenses;
   final ValueChanged<Expense> onExpensePressed;
   final VoidCallback? onAddExpensePressed;
+  final bool filterRecent;
 
   const ExpenseList({
     super.key,
     required this.expenses,
     required this.onExpensePressed,
     this.onAddExpensePressed,
+    this.filterRecent = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final sevenDaysAgo = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7));
+    final List<Expense> displayedExpenses;
 
-    final recentExpenses = expenses.where((expense) {
-      if (expense.createdAt == null) return true;
-      return expense.createdAt!.isAfter(sevenDaysAgo) || expense.createdAt!.isAtSameMomentAs(sevenDaysAgo);
-    }).toList();
+    if (filterRecent) {
+      final now = DateTime.now();
+      final sevenDaysAgo = DateTime(now.year, now.month, now.day)
+          .subtract(const Duration(days: 7));
 
-    if (recentExpenses.isEmpty) {
+      displayedExpenses = expenses.where((expense) {
+        if (expense.createdAt == null) return true;
+        return expense.createdAt!.isAfter(sevenDaysAgo) ||
+            expense.createdAt!.isAtSameMomentAs(sevenDaysAgo);
+      }).toList();
+    } else {
+      displayedExpenses = expenses;
+    }
+
+    if (displayedExpenses.isEmpty) {
       final colors = context.colors;
 
       return SliverFillRemaining(
@@ -39,7 +49,9 @@ class ExpenseList extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "No expenses in the last 7 days",
+                filterRecent
+                    ? "No expenses in the last 7 days"
+                    : "No expenses recorded yet",
                 style: AppTypography.base.copyWith(
                   color: colors.textSecondary,
                 ),
@@ -65,10 +77,10 @@ class ExpenseList extends StatelessWidget {
         bottom: bottomPadding,
       ),
       sliver: SliverList.builder(
-        itemCount: recentExpenses.length,
+        itemCount: displayedExpenses.length,
         itemBuilder: (context, index) {
-          final expense = recentExpenses[index];
-          final isLast = index == recentExpenses.length - 1;
+          final expense = displayedExpenses[index];
+          final isLast = index == displayedExpenses.length - 1;
 
           final itemWidget = Column(
             children: [

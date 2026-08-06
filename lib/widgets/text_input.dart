@@ -10,7 +10,6 @@ class TextInput extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
 
-  final bool isAmount;
   final bool obscureText;
   final bool enabled;
   final bool readOnly;
@@ -38,7 +37,6 @@ class TextInput extends StatelessWidget {
     this.hintText,
     this.controller,
     this.focusNode,
-    this.isAmount = false,
     this.obscureText = false,
     this.enabled = true,
     this.readOnly = false,
@@ -90,7 +88,6 @@ class TextInput extends StatelessWidget {
 
           style: AppTypography.base.copyWith(
             color: colors.textPrimary,
-            fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
           ),
 
           decoration: InputDecoration(
