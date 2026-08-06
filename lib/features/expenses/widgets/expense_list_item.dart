@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:spend_wise/features/expenses/providers/categories_provider.dart';
 import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
@@ -20,6 +21,7 @@ class ExpenseListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final isSkeleton = Skeletonizer.maybeOf(context)?.enabled ?? false;
     final categoriesAsync = ref.watch(categoriesProvider);
     final categoryName = categoriesAsync.maybeWhen(
       data: (categories) {
@@ -72,7 +74,7 @@ class ExpenseListItem extends ConsumerWidget {
                     ),
                     Icon(
                       Icons.chevron_right,
-                      size: 16,
+                      size: 20,
                       color: colors.textSecondary,
                     ),
                   ],
@@ -83,18 +85,21 @@ class ExpenseListItem extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: AppRadius.full,
-                    border: Border.all(color: colors.primary),
-                  ),
-                  child: Text(
-                    categoryName,
-                    style: AppTypography.xs.copyWith(color: colors.primary),
+                Skeleton.leaf(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: AppRadius.full,
+                      border: isSkeleton ? null : Border.all(color: colors.primary),
+                      color: isSkeleton ? colors.primary.withValues(alpha: 0.1) : null,
+                    ),
+                    child: Text(
+                      categoryName,
+                      style: AppTypography.xs.copyWith(color: colors.primary),
+                    ),
                   ),
                 ),
               ],

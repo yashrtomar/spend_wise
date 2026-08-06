@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:spend_wise/features/expenses/widgets/expense_list_item.dart';
 import 'package:spend_wise/models/expense.dart';
+import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
+import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/widgets/primary_button.dart';
 
 class ExpenseList extends StatelessWidget {
   final List<Expense> expenses;
   final ValueChanged<Expense> onExpensePressed;
+  final VoidCallback? onAddExpensePressed;
 
   const ExpenseList({
     super.key,
     required this.expenses,
     required this.onExpensePressed,
+    this.onAddExpensePressed,
   });
 
   @override
@@ -24,25 +29,72 @@ class ExpenseList extends StatelessWidget {
     }).toList();
 
     if (recentExpenses.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
-          child: Text("No expenses in the last 7 days"),
+      final colors = context.colors;
+
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: Container(
+          alignment: const Alignment(0.0, -0.2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "No expenses in the last 7 days",
+                style: AppTypography.base.copyWith(
+                  color: colors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              PrimaryButton(
+                title: "Add Expense",
+                width: 180,
+                onPressed: onAddExpensePressed,
+              ),
+            ],
+          ),
         ),
       );
     }
 
-    return Column(
-      children: [
-        for (int i = 0; i < recentExpenses.length; i++) ...[
-          ExpenseListItem(
-            expense: recentExpenses[i],
-            onPressed: () => onExpensePressed(recentExpenses[i]),
-          ),
-          if (i != recentExpenses.length - 1)
-            const SizedBox(height: AppSpacing.md),
-        ],
-      ],
+    final bottomPadding = 80.0 + MediaQuery.of(context).padding.bottom;
+
+    return SliverPadding(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: bottomPadding,
+      ),
+      sliver: SliverList.builder(
+        itemCount: recentExpenses.length,
+        itemBuilder: (context, index) {
+          final expense = recentExpenses[index];
+          final isLast = index == recentExpenses.length - 1;
+
+          final itemWidget = Column(
+            children: [
+              ExpenseListItem(
+                expense: expense,
+                onPressed: () => onExpensePressed(expense),
+              ),
+              if (!isLast) const SizedBox(height: AppSpacing.md),
+            ],
+          );
+
+          return TweenAnimationBuilder<double>(
+            key: ValueKey(expense.id ?? index),
+            tween: Tween<double>(begin: 0.0, end: 1.0),
+            duration: Duration(milliseconds: 200 + (index * 80).clamp(0, 200)),
+            curve: Curves.easeIn,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: child,
+              );
+            },
+            child: itemWidget,
+          );
+        },
+      ),
     );
   }
 }
