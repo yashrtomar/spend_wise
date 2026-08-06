@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spend_wise/features/auth/screens/login_screen.dart';
 import 'package:spend_wise/theme/app_theme.dart';
+import 'package:spend_wise/widgets/auth_gate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
 
   themeMode: ThemeMode.system,
 
-  home: const LoginScreen(),
+  home: const AuthGate(),
 );
   }
 }
