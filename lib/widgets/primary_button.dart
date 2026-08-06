@@ -34,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
             child: Text(
               title,
               style: AppTypography.base.copyWith(
-                color: textWhite,
+                color: colors.white,
               ),
             ),
           ),

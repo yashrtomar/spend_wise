@@ -32,7 +32,7 @@ class Dropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+    final colors = context.colors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +54,7 @@ class Dropdown<T> extends StatelessWidget {
         ],
 
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           items: items,
           onChanged: enabled ? onChanged : null,
           validator: validator,

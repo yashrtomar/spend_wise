@@ -17,11 +17,11 @@ class SocialButton extends StatelessWidget {
     final colors = context.colors;
 
     return SizedBox(
-      height: 48,
+      height: 56,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          backgroundColor: colors.backgroundCard,
+          backgroundColor: Colors.transparent,
           side: BorderSide(color: colors.border),
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(

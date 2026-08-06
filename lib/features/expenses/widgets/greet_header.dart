@@ -17,20 +17,20 @@ class GreetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+    final colors = context.colors;
 
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
       ),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colors.border,
-          ),
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border(
+      //     bottom: BorderSide(
+      //       color: colors.border,
+      //     ),
+      //   ),
+      // ),
       child: Row(
         children: [
           Expanded(

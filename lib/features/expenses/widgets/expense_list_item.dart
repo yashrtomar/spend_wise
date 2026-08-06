@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spend_wise/features/expenses/providers/categories_provider.dart';
 import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_radius.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
 
-class ExpenseListItem extends StatelessWidget {
+class ExpenseListItem extends ConsumerWidget {
   final Expense expense;
   final VoidCallback onPressed;
 
@@ -16,96 +18,88 @@ class ExpenseListItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final categoriesAsync = ref.watch(categoriesProvider);
+    final categoryName = categoriesAsync.maybeWhen(
+      data: (categories) {
+        final found = categories
+            .where(
+              (c) => c.id == expense.category || c.name == expense.category,
+            )
+            .firstOrNull;
+        return found?.name ?? expense.category;
+      },
+      orElse: () => expense.category,
+    );
 
-    return Material(
-      color: colors.backgroundCard,
+    return InkWell(
       borderRadius: AppRadius.lg,
+      onTap: onPressed,
 
-      child: InkWell(
-        borderRadius: AppRadius.lg,
-        onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
 
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          borderRadius: AppRadius.lg,
+          color: colors.backgroundCard,
+        ),
 
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.lg,
-            border: Border.all(
-              color: colors.border,
-            ),
-          ),
-
-          child: Row(
-            children: [
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    expense.name,
+                    style: AppTypography.base.copyWith(
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Row(
+                  spacing: AppSpacing.sm,
                   children: [
-
                     Text(
-                      expense.name,
+                      "\$${expense.amount.toStringAsFixed(2)}",
                       style: AppTypography.base.copyWith(
                         color: colors.textPrimary,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-
-                    const SizedBox(height: AppSpacing.xs),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: 2,
-                      ),
-
-                      decoration: BoxDecoration(
-                        borderRadius: AppRadius.full,
-                        border: Border.all(
-                          color: colors.primary,
-                        ),
-                      ),
-
-                      child: Text(
-                        expense.category,
-                        style: AppTypography.xs.copyWith(
-                          color: colors.primary,
-                        ),
-                      ),
+                    Icon(
+                      Icons.chevron_right,
+                      size: 16,
+                      color: colors.textSecondary,
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(width: AppSpacing.md),
-
-              Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.end,
-                children: [
-
-                  Text(
-                    "\$${expense.amount.toStringAsFixed(2)}",
-                    style: AppTypography.base.copyWith(
-                      color: colors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: 2,
                   ),
-
-                  const SizedBox(height: AppSpacing.xs),
-
-                  Icon(
-                    Icons.chevron_right,
-                    size: 16,
-                    color: colors.textSecondary,
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.full,
+                    border: Border.all(color: colors.primary),
                   ),
-                ],
-              ),
-            ],
-          ),
+                  child: Text(
+                    categoryName,
+                    style: AppTypography.xs.copyWith(color: colors.primary),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/screens/forgot_password_screen.dart';
+import 'package:spend_wise/features/auth/screens/login_screen.dart';
 import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
 import 'package:spend_wise/features/auth/widgets/oauth_button_row.dart';
 import 'package:spend_wise/features/auth/widgets/section_divider.dart';
@@ -85,162 +86,159 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return AuthLayout(
-    child: Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: AppSpacing.md),
+  Widget build(BuildContext context) {
+    return AuthLayout(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: AppSpacing.md),
 
-          TextInput(
-            hintText: "Name",
-            controller: _nameController,
-            focusNode: _nameFocus,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return "Name is required";
-              }
-              return null;
-            },
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_emailFocus);
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.md),
-
-          TextInput(
-            hintText: "Email",
-            controller: _emailController,
-            focusNode: _emailFocus,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return "Email is required";
-              }
-              return null;
-            },
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_passwordFocus);
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.md),
-
-          TextInput(
-            hintText: "Password",
-            controller: _passwordController,
-            focusNode: _passwordFocus,
-            obscureText: _obscurePassword,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Password is required";
-              }
-              if (value.length < 6) {
-                return "Password must be at least 6 characters";
-              }
-              return null;
-            },
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
+            TextInput(
+              hintText: "Name",
+              controller: _nameController,
+              focusNode: _nameFocus,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return "Name is required";
+                }
+                return null;
               },
-              icon: Icon(
-                _obscurePassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-              ),
-            ),
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_confirmPasswordFocus);
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.md),
-
-          TextInput(
-            hintText: "Confirm Password",
-            controller: _confirmPasswordController,
-            focusNode: _confirmPasswordFocus,
-            obscureText: _obscureConfirmPassword,
-            textInputAction: TextInputAction.done,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Please confirm your password";
-              }
-              if (value != _passwordController.text) {
-                return "Passwords do not match";
-              }
-              return null;
-            },
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  _obscureConfirmPassword =
-                      !_obscureConfirmPassword;
-                });
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_emailFocus);
               },
-              icon: Icon(
-                _obscureConfirmPassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-              ),
             ),
-            onFieldSubmitted: (_) => _register(),
-          ),
 
-          const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
 
-          PrimaryButton(
-            title: _loading
-                ? "Creating Account..."
-                : "Create Account",
-            height: 48,
-            onPressed: _loading ? null : _register,
-          ),
+            TextInput(
+              hintText: "Email",
+              controller: _emailController,
+              focusNode: _emailFocus,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return "Email is required";
+                }
+                return null;
+              },
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_passwordFocus);
+              },
+            ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
+            const SizedBox(height: AppSpacing.md),
+
+            TextInput(
+              hintText: "Password",
+              controller: _passwordController,
+              focusNode: _passwordFocus,
+              obscureText: _obscurePassword,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Password is required";
+                }
+                if (value.length < 6) {
+                  return "Password must be at least 6 characters";
+                }
+                return null;
+              },
+              suffixIcon: IconButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          const ForgotPasswordScreen(),
-                    ),
-                  );
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
                 },
-                child: const Text("Forgot Password?"),
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                ),
               ),
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_confirmPasswordFocus);
+              },
+            ),
 
-              TextButton(
+            const SizedBox(height: AppSpacing.md),
+
+            TextInput(
+              hintText: "Confirm Password",
+              controller: _confirmPasswordController,
+              focusNode: _confirmPasswordFocus,
+              obscureText: _obscureConfirmPassword,
+              textInputAction: TextInputAction.done,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please confirm your password";
+                }
+                if (value != _passwordController.text) {
+                  return "Passwords do not match";
+                }
+                return null;
+              },
+              suffixIcon: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
                 },
-                child: const Text("Login"),
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
               ),
-            ],
-          ),
+              onFieldSubmitted: (_) => _register(),
+            ),
 
-          const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
 
-          const SectionDivider(),
+            PrimaryButton(
+              title: _loading ? "Creating Account..." : "Create Account",
+              height: 48,
+              onPressed: _loading ? null : _register,
+            ),
 
-          const SizedBox(height: AppSpacing.lg),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("Forgot Password?"),
+                ),
 
-          const OauthButtonRow(),
-        ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                  child: const Text("Login"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: AppSpacing.md),
+
+            const SectionDivider(),
+
+            const SizedBox(height: AppSpacing.lg),
+
+            const OauthButtonRow(),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

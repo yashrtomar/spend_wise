@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/screens/login_screen.dart';
-import 'package:spend_wise/features/expenses/screens/home.dart';
+import 'package:spend_wise/features/expenses/screens/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthGate extends StatelessWidget {
@@ -10,10 +10,15 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<AuthState>(
       stream: Supabase.instance.client.auth.onAuthStateChange,
+      initialData: AuthState(
+        AuthChangeEvent.initialSession,
+        Supabase.instance.client.auth.currentSession,
+      ),
       builder: (context, snapshot) {
-        final session = Supabase.instance.client.auth.currentSession;
+        print("EVENT: ${snapshot.data?.event}");
+        print("SESSION: ${snapshot.data?.session}");
 
-        if (session != null) {
+        if (snapshot.data?.session != null) {
           return const HomeScreen();
         }
 

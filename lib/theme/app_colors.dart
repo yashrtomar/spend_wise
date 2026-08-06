@@ -19,6 +19,9 @@ class AppThemeColors {
   final Color warning;
   final Color alert;
 
+  final Color white;
+  final Color black;
+
   const AppThemeColors({
     required this.primary,
     required this.backgroundScreen,
@@ -33,10 +36,10 @@ class AppThemeColors {
     required this.success,
     required this.warning,
     required this.alert,
+    required this.white,
+    required this.black
   });
 }
-
-const textWhite = Color(0xFFFFFFFF);
 
 const lightColors = AppThemeColors(
   primary: Color(0xFF0062FF),
@@ -47,17 +50,19 @@ const lightColors = AppThemeColors(
   textMuted: Color(0x66000000),
   textInverse: Color(0xFF000000),
   textTint: Color(0xFFE0F2FE),
-  border: Color(0xFFE2E8F0),
+  border: Color(0xFFCED2D7),
   error: Color(0xFFFF4444),
   success: Color(0xFF00D41C),
   warning: Color(0xFFF59E0B),
   alert: Color(0xFFF97316),
+  white: Color(0xFFFFFFFF),
+  black: Color(0x00000000)
 );
 
 const darkColors = AppThemeColors(
   primary: Color(0xFF0062FF),
   backgroundScreen: Color(0xFF05080E),
-  backgroundCard: Color(0xFF1E293B),
+  backgroundCard: Color(0xFF0F141D),
   textPrimary: Color(0xFFF8FAFC),
   textSecondary: Color(0xFF94A3B8),
   textMuted: Color(0x66FFFFFF),
@@ -68,6 +73,8 @@ const darkColors = AppThemeColors(
   success: Color(0xFF00D41C),
   warning: Color(0xFFF59E0B),
   alert: Color(0xFFF97316),
+  white: Color(0xFFFFFFFF),
+  black: Color(0x00000000)
 );
 
 extension ThemeExtension on BuildContext {

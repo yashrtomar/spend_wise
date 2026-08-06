@@ -11,12 +11,12 @@ class AddExpenseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+    final colors = context.colors;
 
     return FloatingActionButton(
       onPressed: onPressed,
       backgroundColor: colors.primary,
-      foregroundColor: colors.textInverse,
+      foregroundColor: colors.white,
       child: const Icon(
         Icons.add,
         size: 36,

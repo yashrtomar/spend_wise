@@ -23,7 +23,7 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+    final colors = context.colors;
 
     final spent = budget - remaining;
 
@@ -47,7 +47,7 @@ class BudgetCard extends StatelessWidget {
           Text(
             "Total Monthly Budget",
             style: AppTypography.xs.copyWith(
-              color: colors.textTint,
+              color: colors.white,
               fontWeight: FontWeight.w500,
               letterSpacing: .5,
             ),
@@ -58,7 +58,7 @@ class BudgetCard extends StatelessWidget {
           Text(
             "\$${budget.toStringAsFixed(0)}",
             style: AppTypography.lg.copyWith(
-              color: colors.textInverse,
+              color: colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -85,14 +85,14 @@ class BudgetCard extends StatelessWidget {
               Text(
                 "Remaining Balance",
                 style: AppTypography.xs.copyWith(
-                  color: colors.textTint,
+                  color: colors.white,
                 ),
               ),
 
               Text(
                 "\$${remaining.toStringAsFixed(0)} / \$${budget.toStringAsFixed(0)}",
                 style: AppTypography.xs.copyWith(
-                  color: colors.textInverse,
+                  color: colors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),

@@ -15,22 +15,34 @@ class ExpenseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: EdgeInsets.zero,
+    final now = DateTime.now();
+    final sevenDaysAgo = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7));
 
-      itemCount: expenses.length,
+    final recentExpenses = expenses.where((expense) {
+      if (expense.createdAt == null) return true;
+      return expense.createdAt!.isAfter(sevenDaysAgo) || expense.createdAt!.isAtSameMomentAs(sevenDaysAgo);
+    }).toList();
 
-      separatorBuilder: (_, __) =>
-          const SizedBox(height: AppSpacing.sm),
+    if (recentExpenses.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+          child: Text("No expenses in the last 7 days"),
+        ),
+      );
+    }
 
-      itemBuilder: (context, index) {
-        final expense = expenses[index];
-
-        return ExpenseListItem(
-          expense: expense,
-          onPressed: () => onExpensePressed(expense),
-        );
-      },
+    return Column(
+      children: [
+        for (int i = 0; i < recentExpenses.length; i++) ...[
+          ExpenseListItem(
+            expense: recentExpenses[i],
+            onPressed: () => onExpensePressed(recentExpenses[i]),
+          ),
+          if (i != recentExpenses.length - 1)
+            const SizedBox(height: AppSpacing.md),
+        ],
+      ],
     );
   }
 }

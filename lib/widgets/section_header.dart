@@ -15,7 +15,7 @@ class ExpenseSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppThemeColors>()!;
+    final colors = context.colors;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -35,7 +35,7 @@ class ExpenseSectionHeader extends StatelessWidget {
             ),
           ),
 
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spend_wise/features/expenses/providers/categories_provider.dart';
 import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/widgets/dropdown.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 
-class ExpenseBottomSheet extends StatefulWidget {
-  const ExpenseBottomSheet({super.key, Expense? expense});
+class ExpenseBottomSheet extends ConsumerStatefulWidget {
+  final Expense? expense;
+  const ExpenseBottomSheet({super.key, this.expense});
 
   @override
-  State<ExpenseBottomSheet> createState() => _ExpenseBottomSheetState();
+  ConsumerState<ExpenseBottomSheet> createState() => _ExpenseBottomSheetState();
 }
 
-class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
+class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
@@ -19,15 +22,18 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
   String? _selectedCategory;
   final _noteController = TextEditingController();
 
-  final List<String> _categories = [
-    "Food",
-    "Transport",
-    "Shopping",
-    "Bills",
-    "Entertainment",
-    "Health",
-    "Other",
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.expense != null) {
+      _nameController.text = widget.expense!.name;
+      _amountController.text = widget.expense!.amount.toString();
+      _selectedCategory = widget.expense!.category;
+      if (widget.expense!.note != null) {
+        _noteController.text = widget.expense!.note!;
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -44,7 +50,7 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
 
     print("Name: ${_nameController.text}");
     print("Amount: ${_amountController.text}");
-    print("Category: ${_selectedCategory}");
+    print("Category: $_selectedCategory");
     print("Note: ${_noteController.text}");
 
     Navigator.pop(context);
@@ -52,6 +58,11 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final categoriesAsync = ref.watch(categoriesProvider);
+    final categoryItems = categoriesAsync.value ?? [];
+    final validIds = categoryItems.map((c) => c.id).whereType<String>().toSet();
+    final isSelectedValid = _selectedCategory != null && validIds.contains(_selectedCategory);
+
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(
@@ -68,8 +79,8 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Add Expense",
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  widget.expense == null ? "Add Expense" : "Edit Expense",
+                  // style: context.colors.headlineSmall,
                 ),
                 const SizedBox(height: 24),
                 TextInput(
@@ -105,21 +116,26 @@ class _ExpenseBottomSheetState extends State<ExpenseBottomSheet> {
 
                 Dropdown<String>(
                   label: "Category",
-                  hintText: "Select Category",
-                  value: _selectedCategory,
-                  items: _categories
+                  hintText: categoriesAsync.isLoading
+                      ? "Loading categories..."
+                      : "Select Category",
+                  value: isSelectedValid ? _selectedCategory : null,
+                  items: categoryItems
+                      .where((c) => c.id != null)
                       .map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
+                        (category) => DropdownMenuItem<String>(
+                          value: category.id!,
+                          child: Text(category.name),
                         ),
                       )
                       .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  },
+                  onChanged: categoriesAsync.isLoading
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        },
                   validator: (value) {
                     if (value == null) {
                       return "Please select a category";
