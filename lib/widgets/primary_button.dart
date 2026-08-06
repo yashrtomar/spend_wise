@@ -23,7 +23,7 @@ class PrimaryButton extends StatelessWidget {
 
     return SizedBox(
       width: width ?? double.infinity,
-      height: height ?? 56,
+      height: height ?? 52,
       child: Material(
         color: colors.primary,
         borderRadius: AppRadius.md,
@@ -35,7 +35,6 @@ class PrimaryButton extends StatelessWidget {
               title,
               style: AppTypography.base.copyWith(
                 color: textWhite,
-                fontWeight: FontWeight.w600,
               ),
             ),
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/screens/forgot_password_screen.dart';
 import 'package:spend_wise/features/auth/screens/register_screen.dart';
-import 'package:spend_wise/features/auth/widgets/auth_footer.dart';
 import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
 import 'package:spend_wise/features/auth/widgets/oauth_button_row.dart';
 import 'package:spend_wise/features/auth/widgets/section_divider.dart';
@@ -85,8 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: AppSpacing.md),
             TextInput(
-              label: "Email",
+              hintText: "Email",
               controller: _emailController,
               focusNode: _emailFocus,
               keyboardType: TextInputType.emailAddress,
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: AppSpacing.md),
             TextInput(
-              label: "Password",
+              hintText: "Password",
               controller: _passwordController,
               focusNode: _passwordFocus,
               obscureText: _obscurePassword,
@@ -127,41 +127,45 @@ class _LoginScreenState extends State<LoginScreen> {
               onFieldSubmitted: (_) => _login(),
             ),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ForgotPasswordScreen(),
-                    ),
-                  );
-                },
-                child: const Text("Forgot Password?"),
-              ),
-            ),
+            const SizedBox(height: AppSpacing.md),
 
             PrimaryButton(
               title: _loading ? "Signing In..." : "Login",
               onPressed: _loading ? null : _login,
               height: 48,
             ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("Forgot Password?"),
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                    );
+                  },
+                  child: const Text("Create Account"),
+                ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.md),
+
             const SectionDivider(),
             const SizedBox(height: 32),
             const OauthButtonRow(),
-            const SizedBox(height: 32),
-            AuthFooter(
-              text: "Don't have an account?",
-              actionText: "Create Account",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                );
-              },
-            ),
           ],
         ),
       ),

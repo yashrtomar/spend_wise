@@ -5,7 +5,6 @@ import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
 
 class TextInput extends StatelessWidget {
-  final String? label;
   final String? hintText;
 
   final TextEditingController? controller;
@@ -36,7 +35,6 @@ class TextInput extends StatelessWidget {
 
   const TextInput({
     super.key,
-    this.label,
     this.hintText,
     this.controller,
     this.focusNode,
@@ -66,22 +64,6 @@ class TextInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) ...[
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppSpacing.xs,
-              bottom: AppSpacing.xs,
-            ),
-            child: Text(
-              label!,
-              style: AppTypography.xs.copyWith(
-                color: colors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-
         TextFormField(
           controller: controller,
           focusNode: focusNode,
@@ -117,7 +99,7 @@ class TextInput extends StatelessWidget {
             hintStyle: TextStyle(color: colors.textMuted),
 
             filled: true,
-            fillColor: colors.backgroundCard,
+            fillColor: Colors.transparent,
 
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
@@ -126,7 +108,7 @@ class TextInput extends StatelessWidget {
 
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
-              vertical: AppSpacing.md,
+              vertical: 12,
             ),
 
             enabledBorder: OutlineInputBorder(

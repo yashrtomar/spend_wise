@@ -28,25 +28,25 @@ class AuthHeader extends StatelessWidget {
           color: colors.primary,
         ),
 
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
 
-Text(
-  "Spendwise",
-  style: AppTypography.xl.copyWith(
-    fontSize: 40,
-    fontWeight: FontWeight.w600,
-  ),
-),
+        Text(
+          "Spendwise",
+          style: AppTypography.xl.copyWith(
+            // fontSize: 40,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
 
-const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
 
-Text(
-  "Track your expenses and stay on top of your finances",
-  style: AppTypography.base.copyWith(
-    height: 1.4,
-    color: colors.textSecondary,
-  ),
-),
+        Text(
+          "Track your expenses and stay on top of your finances",
+          style: AppTypography.sm.copyWith(
+            height: 1.4,
+            color: colors.textSecondary,
+          ),
+        ),
       ],
     );
   }
