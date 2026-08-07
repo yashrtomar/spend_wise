@@ -6,7 +6,7 @@ import 'package:spend_wise/theme/app_typography.dart';
 import 'package:spend_wise/widgets/danger_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/features/profile/providers/profile_provider.dart';
-import 'package:spend_wise/features/profile/widgets/manage_categories_sheet.dart';
+import 'package:spend_wise/features/profile/widgets/manage_categories_bottom_sheet.dart';
 import 'package:spend_wise/features/profile/widgets/update_budget_dialog.dart';
 import 'package:spend_wise/features/profile/widgets/settings_card.dart';
 import 'package:spend_wise/features/profile/widgets/settings_divider.dart';
@@ -106,11 +106,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       context: context,
                       isScrollControlled: true,
                       useSafeArea: true,
+                      showDragHandle: true,
                       backgroundColor: colors.backgroundCard,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                       ),
-                      builder: (_) => const ManageCategoriesSheet(),
+                      builder: (_) => const ManageCategoriesBottomSheet(),
                     );
                   },
                 ),

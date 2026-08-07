@@ -55,7 +55,7 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,
-      backgroundColor: context.colors.backgroundScreen,
+      backgroundColor: context.colors.backgroundCard,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -73,8 +73,9 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
 
     final isInitialLoading =
         (expensesAsync.isLoading && !expensesAsync.hasValue) ||
-            (categoriesAsync.isLoading && !categoriesAsync.hasValue);
-    final hasError = (expensesAsync.hasError && !expensesAsync.hasValue) ||
+        (categoriesAsync.isLoading && !categoriesAsync.hasValue);
+    final hasError =
+        (expensesAsync.hasError && !expensesAsync.hasValue) ||
         (categoriesAsync.hasError && !categoriesAsync.hasValue);
     final error = expensesAsync.error ?? categoriesAsync.error;
     final expenses = expensesAsync.value ?? [];
@@ -110,16 +111,10 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 16),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
             if (isInitialLoading)
               SliverPadding(
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  bottom: 80,
-                ),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 80),
                 sliver: SliverToBoxAdapter(
                   child: Skeletonizer(
                     enabled: true,
@@ -127,8 +122,7 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
                       children: List.generate(
                         6,
                         (index) => Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: AppSpacing.md),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: ExpenseListItem(
                             expense: const Expense(
                               name: "Groceries & Supermarket",

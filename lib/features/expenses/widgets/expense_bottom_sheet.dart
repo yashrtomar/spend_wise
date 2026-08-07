@@ -141,7 +141,7 @@ class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
               children: [
                 Text(
                   widget.expense == null ? "New Expense" : "Edit Expense",
-                  style: AppTypography.xl.copyWith(
+                  style: AppTypography.lg.copyWith(
                     color: colors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),

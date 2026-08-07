@@ -6,6 +6,7 @@ import 'package:spend_wise/theme/app_radius.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
+import 'package:spend_wise/widgets/secondary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 
 class UpdateBudgetDialog extends ConsumerStatefulWidget {
@@ -69,12 +70,13 @@ class _UpdateBudgetDialogState extends ConsumerState<UpdateBudgetDialog> {
     final colors = context.colors;
 
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       backgroundColor: colors.backgroundCard,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.lg,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,19 +97,15 @@ class _UpdateBudgetDialogState extends ConsumerState<UpdateBudgetDialog> {
             ),
             const SizedBox(height: AppSpacing.xl),
             Row(
+              spacing: AppSpacing.sm,
               children: [
                 Expanded(
-                  child: TextButton(
+                  child: SecondaryButton(
+                    title: "Cancel",
                     onPressed: _isLoading ? null : () => Navigator.pop(context),
-                    child: Text(
-                      "Cancel",
-                      style: AppTypography.base.copyWith(
-                        color: colors.textSecondary,
-                      ),
-                    ),
+                    height: 48,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: PrimaryButton(
                     title: _isLoading ? "Wait..." : "Save",

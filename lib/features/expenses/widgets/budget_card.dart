@@ -38,7 +38,7 @@ class BudgetCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
 
       decoration: BoxDecoration(
-        color: colors.primary,
+        color: colors.backgroundCard,
         borderRadius: AppRadius.lg,
         boxShadow: AppShadows.card
       ),
@@ -49,7 +49,7 @@ class BudgetCard extends StatelessWidget {
           Text(
             "Total Monthly Budget",
             style: AppTypography.xs.copyWith(
-              color: colors.white,
+              color: colors.textPrimary,
               fontWeight: FontWeight.w500,
               letterSpacing: .5,
             ),
@@ -60,7 +60,7 @@ class BudgetCard extends StatelessWidget {
           Text(
             budget.toStringAsFixed(0),
             style: AppTypography.lg.copyWith(
-              color: colors.white,
+              color: colors.textPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),
