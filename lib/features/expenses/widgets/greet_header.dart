@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/utils/string_extensions.dart';
 
 class GreetHeader extends StatelessWidget {
   final String greeting;
@@ -41,17 +42,16 @@ class GreetHeader extends StatelessWidget {
                   greeting,
                   style: AppTypography.sm.copyWith(
                     color: colors.textSecondary,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
 
                 const SizedBox(height: 2),
 
                 Text(
-                  name,
+                  name.toTitleCase(),
                   style: AppTypography.lg.copyWith(
                     color: colors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

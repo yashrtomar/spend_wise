@@ -108,31 +108,34 @@ class _DeleteCategoryDialogState extends ConsumerState<DeleteCategoryDialog> {
               ),
             ),
             const SizedBox(height: 24),
-            RadioListTile<int>(
-              contentPadding: EdgeInsets.zero,
-              activeColor: colors.primary,
-              title: Text(
-                "Move expenses to 'Other'",
-                style: AppTypography.base.copyWith(color: colors.textPrimary),
-              ),
-              value: 0,
+            RadioGroup<int>(
               groupValue: _selectedOption,
-              onChanged: _isDeleting ? null : (value) {
+              onChanged: (value) {
+                if (_isDeleting) return;
                 if (value != null) setState(() => _selectedOption = value);
               },
-            ),
-            RadioListTile<int>(
-              contentPadding: EdgeInsets.zero,
-              activeColor: colors.error,
-              title: Text(
-                "Delete expenses permanently",
-                style: AppTypography.base.copyWith(color: colors.textPrimary),
+              child: Column(
+                children: [
+                  RadioListTile<int>(
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: colors.primary,
+                    title: Text(
+                      "Move expenses to 'Other'",
+                      style: AppTypography.base.copyWith(color: colors.textPrimary),
+                    ),
+                    value: 0,
+                  ),
+                  RadioListTile<int>(
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: colors.error,
+                    title: Text(
+                      "Delete expenses permanently",
+                      style: AppTypography.base.copyWith(color: colors.textPrimary),
+                    ),
+                    value: 1,
+                  ),
+                ],
               ),
-              value: 1,
-              groupValue: _selectedOption,
-              onChanged: _isDeleting ? null : (value) {
-                if (value != null) setState(() => _selectedOption = value);
-              },
             ),
             const SizedBox(height: 32),
             Row(
@@ -147,14 +150,13 @@ class _DeleteCategoryDialogState extends ConsumerState<DeleteCategoryDialog> {
                 ),
                 Expanded(
                   child: _selectedOption == 0
-                      ? PrimaryButton(
+                      ? DangerButton(
                           title: "Delete",
                           onPressed: _isDeleting ? null : _execute,
                           height: 48,
                         )
                       : DangerButton(
                           title: "Delete",
-                          icon: FontAwesomeIcons.trash,
                           isLoading: _isDeleting,
                           onPressed: _isDeleting ? null : _execute,
                           height: 48,

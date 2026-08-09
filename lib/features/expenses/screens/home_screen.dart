@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/features/expenses/screens/all_expenses_screen.dart';
 import 'package:spend_wise/features/expenses/widgets/add_expense_button.dart';
 import 'package:spend_wise/features/expenses/widgets/budget_card.dart';
@@ -116,10 +117,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("View All", style: TextStyle(color: colors.primary)),
                                 const SizedBox(width: 4),
-                                Icon(Icons.chevron_right, color: colors.primary),
+                                FaIcon(FontAwesomeIcons.chevronRight, size: 10, color: colors.primary),
                               ],
                             ),
                           )

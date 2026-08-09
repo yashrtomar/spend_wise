@@ -277,7 +277,6 @@ class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
                       Expanded(
                         child: DangerButton(
                           title: _isLoading ? "Wait..." : "Delete",
-                          icon: FontAwesomeIcons.trashCan,
                           isLoading: _isLoading,
                           onPressed: _delete,
                           height: 48,

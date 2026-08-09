@@ -11,16 +11,20 @@ class SettingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.backgroundCard,
+    return Material(
+      color: colors.backgroundCard,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: AppRadius.lg,
-        border: Border.all(
+        side: BorderSide(
           color: colors.textSecondary.withValues(alpha: 0.08),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: AppRadius.lg,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
         child: Column(
           children: children,
         ),

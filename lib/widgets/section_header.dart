@@ -30,7 +30,7 @@ class ExpenseSectionHeader extends StatelessWidget {
               title,
               style: AppTypography.lg.copyWith(
                 color: colors.textPrimary,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

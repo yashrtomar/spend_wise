@@ -17,7 +17,7 @@ class AuthLayout extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const AuthHeader(),
               const SizedBox(height: AppSpacing.lg),

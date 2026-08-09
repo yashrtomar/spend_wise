@@ -120,6 +120,7 @@ class _ManageCategoriesBottomSheetState
               ),
               const SizedBox(height: AppSpacing.lg),
               Row(
+                spacing: AppSpacing.sm,
                 children: [
                   Expanded(
                     child: TextInput(
@@ -129,7 +130,6 @@ class _ManageCategoriesBottomSheetState
                       onFieldSubmitted: (_) => _addCategory(),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.md),
                   InkWell(
                     onTap: _isAdding ? null : _addCategory,
                     borderRadius: BorderRadius.circular(12),
@@ -176,7 +176,7 @@ class _ManageCategoriesBottomSheetState
                     return ListView.separated(
                       itemCount: categories.length,
                       separatorBuilder: (context, index) => Divider(
-                        color: colors.textSecondary.withValues(alpha: 0.1),
+                        color: colors.textSecondary.withValues(alpha: 0.5),
                         height: 1,
                       ),
                       itemBuilder: (context, index) {
@@ -230,6 +230,17 @@ class _ManageCategoriesBottomSheetState
                                       size: 16,
                                     ),
                                   ),
+                                ] else ...[
+                                  // Placeholder for the 'Other' category to maintain row height
+                                  IconButton(
+                                    onPressed: null,
+                                    icon: FaIcon(
+                                      FontAwesomeIcons.lock,
+                                      color: colors.textMuted.withValues(alpha: 0.3),
+                                      size: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 48),
                                 ],
                               ] else ...[
                                 IconButton(

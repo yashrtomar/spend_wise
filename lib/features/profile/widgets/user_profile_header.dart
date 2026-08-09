@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/utils/string_extensions.dart';
 
 class UserProfileHeader extends StatelessWidget {
   final String name;
@@ -39,7 +40,7 @@ class UserProfileHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                name.toTitleCase(),
                 style: AppTypography.xl.copyWith(
                   color: colors.textPrimary,
                   fontWeight: FontWeight.bold,

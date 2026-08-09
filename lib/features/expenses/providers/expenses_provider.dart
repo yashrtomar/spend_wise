@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/models/expense.dart';
+import 'package:spend_wise/models/expense_filter.dart';
 import 'package:spend_wise/services/expenses_service.dart';
 
 final expenseServiceProvider = Provider<ExpenseService>((ref) {
@@ -10,6 +11,12 @@ final expensesProvider = FutureProvider<List<Expense>>((ref) async {
   final expenseService = ref.watch(expenseServiceProvider);
   return expenseService.getExpenses();
 });
+
+final expenseSearchQueryProvider = StateProvider<String>((ref) => '');
+
+final expenseFilterProvider = StateProvider<ExpenseFilter>((ref) => const ExpenseFilter());
+
+final expenseSortProvider = StateProvider<ExpenseSort>((ref) => ExpenseSort.newest);
 
 class PaginatedExpensesNotifier
     extends AutoDisposeAsyncNotifier<List<Expense>> {
@@ -24,8 +31,17 @@ class PaginatedExpensesNotifier
     hasMore = true;
     isFetchingMore = false;
     final service = ref.watch(expenseServiceProvider);
-    final initialList =
-        await service.getExpenses(limit: _limit, offset: _offset);
+    final searchQuery = ref.watch(expenseSearchQueryProvider);
+    final filter = ref.watch(expenseFilterProvider);
+    final sort = ref.watch(expenseSortProvider);
+    
+    final initialList = await service.getExpenses(
+      limit: _limit,
+      offset: _offset,
+      searchQuery: searchQuery,
+      filter: filter,
+      sort: sort,
+    );
     if (initialList.length < _limit) {
       hasMore = false;
     } else {
@@ -42,8 +58,17 @@ class PaginatedExpensesNotifier
     isFetchingMore = true;
     try {
       final service = ref.read(expenseServiceProvider);
-      final nextList =
-          await service.getExpenses(limit: _limit, offset: _offset);
+      final searchQuery = ref.read(expenseSearchQueryProvider);
+      final filter = ref.read(expenseFilterProvider);
+      final sort = ref.read(expenseSortProvider);
+      
+      final nextList = await service.getExpenses(
+        limit: _limit,
+        offset: _offset,
+        searchQuery: searchQuery,
+        filter: filter,
+        sort: sort,
+      );
 
       if (nextList.length < _limit) {
         hasMore = false;

@@ -6,10 +6,7 @@ import 'package:spend_wise/theme/app_typography.dart';
 class SectionDivider extends StatelessWidget {
   final String text;
 
-  const SectionDivider({
-    super.key,
-    this.text = "or continue with",
-  });
+  const SectionDivider({super.key, this.text = "or continue with"});
 
   @override
   Widget build(BuildContext context) {
@@ -17,32 +14,17 @@ class SectionDivider extends StatelessWidget {
 
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: colors.border,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: colors.border, thickness: 1)),
 
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           child: Text(
             text,
-            style: AppTypography.sm.copyWith(
-              color: colors.textSecondary,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTypography.sm.copyWith(color: colors.border),
           ),
         ),
 
-        Expanded(
-          child: Divider(
-            color: colors.border,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: colors.border, thickness: 1)),
       ],
     );
   }

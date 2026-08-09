@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spend_wise/features/auth/screens/forgot_password_screen.dart';
 import 'package:spend_wise/features/auth/screens/login_screen.dart';
 import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
-import 'package:spend_wise/features/auth/widgets/oauth_button_row.dart';
+// import 'package:spend_wise/features/auth/widgets/oauth_button_row.dart';
 import 'package:spend_wise/features/auth/widgets/section_divider.dart';
 import 'package:spend_wise/services/auth_service.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
@@ -10,7 +9,8 @@ import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final VoidCallback? onToggle;
+  const RegisterScreen({super.key, this.onToggle});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -65,13 +65,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
 
+      Navigator.of(context).popUntil((route) => route.isFirst);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Registration successful. Please verify your email."),
         ),
       );
-
-      Navigator.pop(context);
     } on Exception catch (e) {
       if (!mounted) return;
 
@@ -94,7 +94,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: AppSpacing.md),
-
             TextInput(
               hintText: "Name",
               controller: _nameController,
@@ -110,9 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 FocusScope.of(context).requestFocus(_emailFocus);
               },
             ),
-
             const SizedBox(height: AppSpacing.md),
-
             TextInput(
               hintText: "Email",
               controller: _emailController,
@@ -129,9 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 FocusScope.of(context).requestFocus(_passwordFocus);
               },
             ),
-
             const SizedBox(height: AppSpacing.md),
-
             TextInput(
               hintText: "Password",
               controller: _passwordController,
@@ -161,7 +156,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 FocusScope.of(context).requestFocus(_confirmPasswordFocus);
               },
             ),
-
             const SizedBox(height: AppSpacing.md),
 
             TextInput(
@@ -193,49 +187,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               onFieldSubmitted: (_) => _register(),
             ),
-
             const SizedBox(height: AppSpacing.md),
-
             PrimaryButton(
               title: _loading ? "Creating Account..." : "Create Account",
               height: 48,
               onPressed: _loading ? null : _register,
             ),
-
+            const SizedBox(height: AppSpacing.md),
+            const SectionDivider(),
+            const SizedBox(height: AppSpacing.lg),
+            // const OauthButtonRow(),
+            const SizedBox(height: 32),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const ForgotPasswordScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text("Forgot Password?"),
+                Text(
+                  "Already have an account?",
+                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                 ),
-
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    );
+                    if (widget.onToggle != null) {
+                      widget.onToggle!();
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      );
+                    }
                   },
                   child: const Text("Login"),
                 ),
               ],
             ),
-
-            const SizedBox(height: AppSpacing.md),
-
-            const SectionDivider(),
-
-            const SizedBox(height: AppSpacing.lg),
-
-            const OauthButtonRow(),
           ],
         ),
       ),

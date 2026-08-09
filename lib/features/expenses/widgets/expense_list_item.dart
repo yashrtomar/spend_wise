@@ -6,6 +6,7 @@ import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_radius.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
+import 'package:intl/intl.dart';
 import 'package:spend_wise/theme/app_typography.dart';
 
 class ExpenseListItem extends ConsumerWidget {
@@ -45,64 +46,53 @@ class ExpenseListItem extends ConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: AppRadius.lg,
           color: colors.backgroundCard,
+          boxShadow: AppShadows.card,
         ),
 
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: AppSpacing.sm,
+                children: [
+                  Text(
                     expense.name,
                     style: AppTypography.base.copyWith(
                       color: colors.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Row(
-                  spacing: AppSpacing.sm,
-                  children: [
+                  if ((expense.note != null &&
+                          expense.note!.trim().isNotEmpty) ||
+                      isSkeleton) ...[
                     Text(
-                      expense.amount.toStringAsFixed(2),
-                      style: AppTypography.base.copyWith(
-                        color: colors.textPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 20,
-                      color: colors.textSecondary,
+                      isSkeleton ? "Loading note..." : expense.note!.trim(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.sm.copyWith(color: colors.textMuted),
                     ),
                   ],
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Skeleton.leaf(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: AppRadius.full,
-                      border: isSkeleton ? null : Border.all(color: colors.primary),
-                      color: isSkeleton ? colors.primary.withValues(alpha: 0.1) : null,
-                    ),
-                    child: Text(
-                      categoryName,
-                      style: AppTypography.xs.copyWith(color: colors.primary),
+                  Text(
+                    expense.createdAt != null
+                        ? '$categoryName • ${DateFormat('MMM d').format(expense.createdAt!)}'
+                        : categoryName,
+                    style: AppTypography.sm.copyWith(
+                      color: colors.textSecondary,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+            // const SizedBox(width: AppSpacing.md),
+            Text(
+              "\$${expense.amount.toStringAsFixed(2)}",
+              style: AppTypography.base.copyWith(
+                color: colors.textPrimary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

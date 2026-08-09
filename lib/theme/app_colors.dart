@@ -43,7 +43,7 @@ class AppThemeColors {
 
 const lightColors = AppThemeColors(
   primary: Color(0xFF0062FF),
-  backgroundScreen: Color(0xFFF8FAFC),
+  backgroundScreen: Color(0xFFF1F5F9), // Slate 100 for better contrast against white cards
   backgroundCard: Color(0xFFFFFFFF),
   textPrimary: Color(0xFF000000),
   textSecondary: Color(0xFF666666),
@@ -62,7 +62,7 @@ const lightColors = AppThemeColors(
 const darkColors = AppThemeColors(
   primary: Color(0xFF0062FF),
   backgroundScreen: Color(0xFF05080E),
-  backgroundCard: Color(0xFF0F141D),
+  backgroundCard: Color(0xFF131924),
   textPrimary: Color(0xFFF8FAFC),
   textSecondary: Color(0xFF94A3B8),
   textMuted: Color(0x66FFFFFF),

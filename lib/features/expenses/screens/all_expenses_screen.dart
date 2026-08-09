@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -11,6 +12,11 @@ import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/widgets/text_input.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_wise/features/expenses/widgets/expenses_filter_bottom_sheet.dart';
+import 'package:spend_wise/features/expenses/widgets/expenses_sort_bottom_sheet.dart';
+import 'package:spend_wise/models/expense_filter.dart';
 
 class AllExpensesScreen extends ConsumerStatefulWidget {
   const AllExpensesScreen({super.key});
@@ -21,6 +27,8 @@ class AllExpensesScreen extends ConsumerStatefulWidget {
 
 class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
   bool _isLoadingMore = false;
 
   @override
@@ -31,9 +39,18 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(expenseSearchQueryProvider.notifier).state = query;
+    });
   }
 
   void _onScroll() {
@@ -79,6 +96,7 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
         (categoriesAsync.hasError && !categoriesAsync.hasValue);
     final error = expensesAsync.error ?? categoriesAsync.error;
     final expenses = expensesAsync.value ?? [];
+    final searchQuery = ref.watch(expenseSearchQueryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,6 +112,35 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
         elevation: 0,
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: colors.textPrimary),
+        actions: [
+          _buildFilterButton(context, ref, colors),
+          const SizedBox(width: 8),
+          _buildSortButton(context, ref, colors),
+          const SizedBox(width: 16),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(68),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
+            child: TextInput(
+              controller: _searchController,
+              hintText: 'Search expenses...',
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 12.0),
+                child: Align(
+                  widthFactor: 1.0,
+                  heightFactor: 1.0,
+                  child: FaIcon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    size: 16,
+                    color: colors.textMuted,
+                  ),
+                ),
+              ),
+              onChanged: _onSearchChanged,
+            ),
+          ),
+        ),
       ),
       body: RefreshIndicator(
         color: colors.primary,
@@ -111,7 +158,7 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
             if (isInitialLoading)
               SliverPadding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 80),
@@ -154,6 +201,7 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
               ExpenseList(
                 expenses: expenses,
                 filterRecent: false,
+                searchQuery: searchQuery,
                 onExpensePressed: (expense) {
                   _openExpenseSheet(expense: expense);
                 },
@@ -185,6 +233,99 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
           _openExpenseSheet();
         },
       ),
+    );
+  }
+
+  Widget _buildFilterButton(BuildContext context, WidgetRef ref, AppThemeColors colors) {
+    final filter = ref.watch(expenseFilterProvider);
+    final isActive = !filter.isEmpty;
+
+    return Stack(
+      children: [
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              useSafeArea: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => const ExpensesFilterBottomSheet(),
+            );
+          },
+          icon: FaIcon(
+            FontAwesomeIcons.filter,
+            size: 20,
+            color: isActive ? colors.primary : colors.textPrimary,
+          ),
+          style: IconButton.styleFrom(
+            backgroundColor: isActive ? colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(8),
+          ),
+        ),
+        if (isActive)
+          Positioned(
+            top: 8,
+            right: 8,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: colors.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSortButton(BuildContext context, WidgetRef ref, AppThemeColors colors) {
+    final sort = ref.watch(expenseSortProvider);
+    final isActive = sort != ExpenseSort.newest;
+
+    return Stack(
+      children: [
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              useSafeArea: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => const ExpensesSortBottomSheet(),
+            );
+          },
+          icon: FaIcon(
+            FontAwesomeIcons.sort,
+            size: 20,
+            color: isActive ? colors.primary : colors.textPrimary,
+          ),
+          style: IconButton.styleFrom(
+            backgroundColor: isActive ? colors.primary.withValues(alpha: 0.1) : colors.backgroundCard,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: isActive ? colors.primary : colors.border),
+            ),
+            padding: const EdgeInsets.all(12),
+          ),
+        ),
+        if (isActive)
+          Positioned(
+            top: 8,
+            right: 8,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: colors.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

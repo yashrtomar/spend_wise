@@ -11,6 +11,7 @@ class ExpenseList extends StatelessWidget {
   final ValueChanged<Expense> onExpensePressed;
   final VoidCallback? onAddExpensePressed;
   final bool filterRecent;
+  final String? searchQuery;
 
   const ExpenseList({
     super.key,
@@ -18,6 +19,7 @@ class ExpenseList extends StatelessWidget {
     required this.onExpensePressed,
     this.onAddExpensePressed,
     this.filterRecent = true,
+    this.searchQuery,
   });
 
   @override
@@ -51,10 +53,13 @@ class ExpenseList extends StatelessWidget {
               Text(
                 filterRecent
                     ? "No expenses in the last 7 days"
-                    : "No expenses recorded yet",
+                    : (searchQuery != null && searchQuery!.isNotEmpty)
+                        ? "No expenses found for '$searchQuery'"
+                        : "No expenses recorded yet",
                 style: AppTypography.base.copyWith(
                   color: colors.textSecondary,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.md),
               PrimaryButton(

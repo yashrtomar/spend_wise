@@ -72,14 +72,14 @@ class BudgetCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 6,
-              backgroundColor: Colors.white24,
+              backgroundColor: colors.textPrimary.withValues(alpha: 0.1),
               valueColor: AlwaysStoppedAnimation(
                 _progressColor(colors, progress),
               ),
             ),
           ),
 
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +87,7 @@ class BudgetCard extends StatelessWidget {
               Text(
                 isOverBudget ? "Over Budget by" : "Remaining Balance",
                 style: AppTypography.xs.copyWith(
-                  color: colors.white,
+                  color: colors.textPrimary,
                 ),
               ),
 
@@ -96,7 +96,7 @@ class BudgetCard extends StatelessWidget {
                     ? overBudgetAmount.toStringAsFixed(0)
                     : "${remaining.toStringAsFixed(0)} / ${budget.toStringAsFixed(0)}",
                 style: AppTypography.xs.copyWith(
-                  color: colors.white,
+                  color: colors.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
