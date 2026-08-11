@@ -99,7 +99,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final hasExpenses = expenses.isNotEmpty;
 
     final budget = profileAsync.value?.monthlyBudget ?? 0.0;
-    final spent = expenses.fold<double>(
+    
+    final now = DateTime.now();
+    final currentMonthExpenses = expenses.where((expense) {
+      if (expense.createdAt == null) return false;
+      return expense.createdAt!.year == now.year && expense.createdAt!.month == now.month;
+    });
+
+    final spent = currentMonthExpenses.fold<double>(
       0.0,
       (sum, expense) => sum + expense.amount,
     );
