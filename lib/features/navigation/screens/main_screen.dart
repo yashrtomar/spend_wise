@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spend_wise/features/expenses/screens/all_expenses_screen.dart';
-import 'package:spend_wise/features/expenses/screens/home_screen.dart';
+import 'package:spend_wise/features/expenses/presentation/screens/all_expenses_screen.dart';
+import 'package:spend_wise/features/expenses/presentation/screens/home_screen.dart';
 import 'package:spend_wise/features/navigation/widgets/main_bottom_nav_bar.dart';
-import 'package:spend_wise/features/profile/screens/profile_screen.dart';
+import 'package:spend_wise/features/profile/presentation/screens/profile_screen.dart';
+import 'package:spend_wise/widgets/fade_indexed_stack.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -32,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
-        body: IndexedStack(
+        body: FadeIndexedStack(
           index: _currentIndex,
           children: _screens,
         ),

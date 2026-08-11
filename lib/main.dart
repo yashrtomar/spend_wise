@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/theme/app_theme.dart';
-import 'package:spend_wise/widgets/auth_gate.dart';
+import 'package:spend_wise/features/auth/presentation/widgets/auth_gate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
