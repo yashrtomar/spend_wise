@@ -5,6 +5,7 @@ import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
 import 'package:spend_wise/features/auth/widgets/section_divider.dart';
 import 'package:spend_wise/services/auth_service.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 
@@ -67,17 +68,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       Navigator.of(context).popUntil((route) => route.isFirst);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Registration successful. Please verify your email."),
-        ),
-      );
+      SnackbarHelper.showSuccess(context, "Registration successful. Please verify your email.");
     } on Exception catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      SnackbarHelper.showError(context, e.toString());
     } finally {
       if (mounted) {
         setState(() => _loading = false);

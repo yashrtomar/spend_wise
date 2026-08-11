@@ -3,6 +3,7 @@ import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
 import 'package:spend_wise/services/auth_service.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -35,21 +36,13 @@ class _ForgotPasswordScreenState
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Password reset email sent.",
-          ),
-        ),
-      );
+      SnackbarHelper.showSuccess(context, "Password reset email sent.");
 
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      SnackbarHelper.showError(context, e.toString());
     }
 
     if (mounted) {

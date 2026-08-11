@@ -88,7 +88,7 @@ class ExpenseListItem extends ConsumerWidget {
             ),
             // const SizedBox(width: AppSpacing.md),
             Text(
-              "\$${expense.amount.toStringAsFixed(2)}",
+              expense.amount.toStringAsFixed(2),
               style: AppTypography.base.copyWith(
                 color: colors.textPrimary,
                 fontWeight: FontWeight.w600,

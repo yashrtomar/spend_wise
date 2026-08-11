@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/screens/forgot_password_screen.dart';
 import 'package:spend_wise/features/auth/screens/register_screen.dart';
 import 'package:spend_wise/features/auth/widgets/auth_layout.dart';
-// import 'package:spend_wise/features/auth/widgets/oauth_button_row.dart';
 import 'package:spend_wise/features/auth/widgets/section_divider.dart';
 import 'package:spend_wise/services/auth_service.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 
@@ -63,15 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
       // But we leave it in case it's used elsewhere
       Navigator.of(context).popUntil((route) => route.isFirst);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Login successful")));
+      SnackbarHelper.showSuccess(context, "Login successful");
     } on Exception catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      SnackbarHelper.showError(context, e.toString());
     } finally {
       if (mounted) {
         setState(() {

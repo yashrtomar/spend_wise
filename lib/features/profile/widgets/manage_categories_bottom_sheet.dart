@@ -8,6 +8,7 @@ import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
 import 'package:spend_wise/widgets/text_input.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 import 'package:spend_wise/features/profile/widgets/delete_category_dialog.dart';
 
 class ManageCategoriesBottomSheet extends ConsumerStatefulWidget {
@@ -47,9 +48,7 @@ class _ManageCategoriesBottomSheetState
       await ref.read(categoriesProvider.future);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Failed to add category: $e')));
+        SnackbarHelper.showError(context, 'Failed to add category: $e');
       }
     } finally {
       if (mounted) setState(() => _isAdding = false);
@@ -69,9 +68,7 @@ class _ManageCategoriesBottomSheetState
       await ref.read(categoriesProvider.future);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update category: $e')),
-        );
+        SnackbarHelper.showError(context, 'Failed to update category: $e');
       }
     } finally {
       if (mounted) setState(() => _editingCategoryId = null);

@@ -6,11 +6,11 @@ import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/widgets/danger_button.dart';
 import 'package:spend_wise/widgets/dropdown.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 
 class ExpenseBottomSheet extends ConsumerStatefulWidget {
   final Expense? expense;
@@ -87,6 +87,11 @@ class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
 
       if (mounted) {
         Navigator.pop(context);
+        SnackbarHelper.showSuccess(context, widget.expense == null ? "Expense added successfully" : "Expense updated successfully");
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackbarHelper.showError(context, "Failed to save expense: $e");
       }
     } finally {
       if (mounted) {
@@ -109,6 +114,11 @@ class _ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
 
       if (mounted) {
         Navigator.pop(context);
+        SnackbarHelper.showSuccess(context, "Expense deleted successfully");
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackbarHelper.showError(context, "Failed to delete expense: $e");
       }
     } finally {
       if (mounted) {

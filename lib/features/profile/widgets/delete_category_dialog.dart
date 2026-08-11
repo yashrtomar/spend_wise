@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/features/expenses/providers/categories_provider.dart';
 import 'package:spend_wise/features/expenses/providers/expenses_provider.dart';
 import 'package:spend_wise/models/category.dart';
@@ -8,8 +7,8 @@ import 'package:spend_wise/services/categories_service.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 import 'package:spend_wise/widgets/danger_button.dart';
-import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/secondary_button.dart';
 
 class DeleteCategoryDialog extends ConsumerStatefulWidget {
@@ -48,9 +47,7 @@ class _DeleteCategoryDialogState extends ConsumerState<DeleteCategoryDialog> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete category: $e')),
-        );
+        SnackbarHelper.showError(context, 'Failed to delete category: $e');
       }
     } finally {
       if (mounted) setState(() => _isDeleting = false);
@@ -68,9 +65,7 @@ class _DeleteCategoryDialogState extends ConsumerState<DeleteCategoryDialog> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to move expenses and delete category: $e')),
-        );
+        SnackbarHelper.showError(context, 'Failed to move expenses and delete category: $e');
       }
     } finally {
       if (mounted) setState(() => _isDeleting = false);

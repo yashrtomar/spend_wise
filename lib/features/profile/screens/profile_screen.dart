@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/services/auth_service.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 import 'package:spend_wise/widgets/danger_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/features/profile/providers/profile_provider.dart';
@@ -32,9 +33,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       await _authService.logout();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
+        SnackbarHelper.showError(context, e.toString());
       }
     } finally {
       if (mounted) {

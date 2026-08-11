@@ -8,6 +8,7 @@ import 'package:spend_wise/theme/app_typography.dart';
 import 'package:spend_wise/widgets/primary_button.dart';
 import 'package:spend_wise/widgets/secondary_button.dart';
 import 'package:spend_wise/widgets/text_input.dart';
+import 'package:spend_wise/utils/snackbar_helper.dart';
 
 class UpdateBudgetDialog extends ConsumerStatefulWidget {
   final double currentBudget;
@@ -39,9 +40,7 @@ class _UpdateBudgetDialogState extends ConsumerState<UpdateBudgetDialog> {
   Future<void> _save() async {
     final value = double.tryParse(_controller.text);
     if (value == null || value < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid budget amount')),
-      );
+      SnackbarHelper.showError(context, 'Please enter a valid budget amount');
       return;
     }
 
@@ -54,9 +53,7 @@ class _UpdateBudgetDialogState extends ConsumerState<UpdateBudgetDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update budget: $e')),
-        );
+        SnackbarHelper.showError(context, 'Failed to update budget: $e');
       }
     } finally {
       if (mounted) {

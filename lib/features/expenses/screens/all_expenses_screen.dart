@@ -12,6 +12,7 @@ import 'package:spend_wise/models/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
 import 'package:spend_wise/theme/app_typography.dart';
+import 'package:spend_wise/widgets/error_state.dart';
 import 'package:spend_wise/widgets/text_input.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/features/expenses/widgets/expenses_filter_bottom_sheet.dart';
@@ -82,20 +83,52 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
     ref.invalidate(paginatedExpensesProvider);
   }
 
+  Widget _buildSkeletonLoader() {
+    return SliverPadding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 80),
+      sliver: SliverToBoxAdapter(
+        child: Skeletonizer(
+          enabled: true,
+          child: Column(
+            children: List.generate(
+              6,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: ExpenseListItem(
+                  expense: const Expense(
+                    name: "Groceries & Supermarket",
+                    amount: 145.50,
+                    category: "Food & Dining",
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(Object error) {
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: ErrorState(
+        message: 'Failed to load expenses: $error',
+        onRetry: () {
+          ref.invalidate(paginatedExpensesProvider);
+          ref.invalidate(categoriesProvider);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final expensesAsync = ref.watch(paginatedExpensesProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
-    final isInitialLoading =
-        (expensesAsync.isLoading && !expensesAsync.hasValue) ||
-        (categoriesAsync.isLoading && !categoriesAsync.hasValue);
-    final hasError =
-        (expensesAsync.hasError && !expensesAsync.hasValue) ||
-        (categoriesAsync.hasError && !categoriesAsync.hasValue);
-    final error = expensesAsync.error ?? categoriesAsync.error;
-    final expenses = expensesAsync.value ?? [];
     final searchQuery = ref.watch(expenseSearchQueryProvider);
 
     return Scaffold(
@@ -159,56 +192,30 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const SliverToBoxAdapter(child: SizedBox(height: 8)),
-            if (isInitialLoading)
-              SliverPadding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 80),
-                sliver: SliverToBoxAdapter(
-                  child: Skeletonizer(
-                    enabled: true,
-                    child: Column(
-                      children: List.generate(
-                        6,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                          child: ExpenseListItem(
-                            expense: const Expense(
-                              name: "Groceries & Supermarket",
-                              amount: 145.50,
-                              category: "Food & Dining",
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            else if (hasError)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Failed to load expenses: $error',
-                      style: TextStyle(color: colors.error),
-                    ),
-                  ),
-                ),
-              )
-            else
-              ExpenseList(
-                expenses: expenses,
-                filterRecent: false,
-                searchQuery: searchQuery,
-                onExpensePressed: (expense) {
-                  _openExpenseSheet(expense: expense);
-                },
-                onAddExpensePressed: () {
-                  _openExpenseSheet();
-                },
-              ),
+            expensesAsync.when(
+              skipLoadingOnReload: true,
+              data: (expensesList) {
+                if (categoriesAsync.isLoading) {
+                  return _buildSkeletonLoader();
+                }
+                if (categoriesAsync.hasError) {
+                  return _buildErrorState(categoriesAsync.error!);
+                }
+                return ExpenseList(
+                  expenses: expensesList,
+                  filterRecent: false,
+                  searchQuery: searchQuery,
+                  onExpensePressed: (expense) {
+                    _openExpenseSheet(expense: expense);
+                  },
+                  onAddExpensePressed: () {
+                    _openExpenseSheet();
+                  },
+                );
+              },
+              loading: () => _buildSkeletonLoader(),
+              error: (error, stack) => _buildErrorState(error),
+            ),
             if (_isLoadingMore)
               SliverToBoxAdapter(
                 child: Padding(
