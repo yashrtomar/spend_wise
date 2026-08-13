@@ -40,8 +40,8 @@ class BudgetCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundCard,
         borderRadius: AppRadius.lg,
-        boxShadow: AppShadows.card,
-        border: Border.all(color: colors.border),
+        boxShadow: AppShadows.card(context),
+        border: Border.all(color: colors.textSecondary.withValues(alpha: 0.08)),
       ),
 
       child: Column(

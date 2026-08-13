@@ -43,7 +43,7 @@ class AppThemeColors {
 
 const lightColors = AppThemeColors(
   primary: Color(0xFF0062FF),
-  backgroundScreen: Color(0xFFF1F5F9), // Slate 100 for better contrast against white cards
+  backgroundScreen: Color(0xFFF8FAFC), // Slate 50 for a softer, cleaner contrast
   backgroundCard: Color(0xFFFFFFFF),
   textPrimary: Color(0xFF000000),
   textSecondary: Color(0xFF666666),
@@ -61,8 +61,8 @@ const lightColors = AppThemeColors(
 
 const darkColors = AppThemeColors(
   primary: Color(0xFF0062FF),
-  backgroundScreen: Color(0xFF05080E),
-  backgroundCard: Color(0xFF131924),
+  backgroundScreen: Color(0xFF0D0D0D), // Pure black (OLED friendly, zero tint)
+  backgroundCard: Color(0xFF151922), // Bare minimum cool tint over dark gray
   textPrimary: Color(0xFFF8FAFC),
   textSecondary: Color(0xFF94A3B8),
   textMuted: Color(0x66FFFFFF),
@@ -87,10 +87,10 @@ extension ThemeExtension on BuildContext {
 
 class AppShadows {
   static const card = [
-    BoxShadow(
-      blurRadius: 12,
+      BoxShadow(
+        blurRadius: 12,
       offset: Offset(0, 6),
       color: Colors.black12,
-    ),
-  ];
+      ),
+    ];
 }
