@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spend_wise/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:spend_wise/features/auth/presentation/screens/register_screen.dart';
 import 'package:spend_wise/features/auth/presentation/widgets/auth_layout.dart';
-import 'package:spend_wise/features/auth/presentation/widgets/section_divider.dart';
+// import 'package:spend_wise/features/auth/presentation/widgets/section_divider.dart';
 import 'package:spend_wise/features/auth/presentation/providers/auth_di_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
