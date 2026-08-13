@@ -46,7 +46,7 @@ class ExpenseListItem extends ConsumerWidget {
           borderRadius: AppRadius.lg,
           color: colors.backgroundCard,
           boxShadow: AppShadows.card,
-          border: Border.all(color: colors.border),
+          border: Border.all(color: colors.border.withValues(alpha: 0.08)),
         ),
 
         child: Row(
