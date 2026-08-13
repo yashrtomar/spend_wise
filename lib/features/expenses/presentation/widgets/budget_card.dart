@@ -40,7 +40,8 @@ class BudgetCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundCard,
         borderRadius: AppRadius.lg,
-        boxShadow: AppShadows.card
+        boxShadow: AppShadows.card,
+        border: Border.all(color: colors.border),
       ),
 
       child: Column(
@@ -59,7 +60,7 @@ class BudgetCard extends StatelessWidget {
 
           Text(
             budget.toStringAsFixed(0),
-            style: AppTypography.lg.copyWith(
+            style: AppTypography.xxl.copyWith(
               color: colors.textPrimary,
               fontWeight: FontWeight.bold,
             ),

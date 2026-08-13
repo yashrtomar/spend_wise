@@ -152,12 +152,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 48,
             ),
 
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.xl),
 
-            const SectionDivider(),
-            const SizedBox(height: 32),
+            // const SectionDivider(),
+            // const SizedBox(height: AppSpacing.xl),
             // const OauthButtonRow(),
-            const SizedBox(height: 32),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     }
                   },
-                  child: const Text("Create Account"),
+                  child: const Text("Register"),
                 ),
               ],
             ),

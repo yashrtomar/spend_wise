@@ -36,8 +36,7 @@ class ExpenseListItem extends ConsumerWidget {
       orElse: () => expense.category,
     );
 
-    return InkWell(
-      borderRadius: AppRadius.lg,
+    return GestureDetector(
       onTap: onPressed,
 
       child: Container(
@@ -47,6 +46,7 @@ class ExpenseListItem extends ConsumerWidget {
           borderRadius: AppRadius.lg,
           color: colors.backgroundCard,
           boxShadow: AppShadows.card,
+          border: Border.all(color: colors.border),
         ),
 
         child: Row(
@@ -62,7 +62,7 @@ class ExpenseListItem extends ConsumerWidget {
                     expense.name,
                     style: AppTypography.base.copyWith(
                       color: colors.textPrimary,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   if ((expense.note != null &&
@@ -89,9 +89,9 @@ class ExpenseListItem extends ConsumerWidget {
             // const SizedBox(width: AppSpacing.md),
             Text(
               expense.amount.toStringAsFixed(2),
-              style: AppTypography.base.copyWith(
+              style: AppTypography.md.copyWith(
                 color: colors.textPrimary,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],

@@ -13,17 +13,25 @@ class AuthLayout extends StatelessWidget {
       resizeToAvoidBottomInset: true,
 
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const AuthHeader(),
-              const SizedBox(height: AppSpacing.lg),
-              child, // login form
-            ],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const AuthHeader(),
+                    const SizedBox(height: 48), // Increased gap here
+                    child, // login form
+                    const SizedBox(height: AppSpacing.xl), // Add breathing room at bottom
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

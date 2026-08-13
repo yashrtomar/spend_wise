@@ -19,10 +19,14 @@ class AppTypography {
   );
 
   static const lg = TextStyle(
-    fontSize: 24,
+    fontSize: 20,
   );
 
   static const xl = TextStyle(
+    fontSize: 24,
+  );
+
+  static const xxl = TextStyle(
     fontSize: 32,
   );
 }

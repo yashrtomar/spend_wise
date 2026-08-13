@@ -15,6 +15,7 @@ import 'package:spend_wise/features/expenses/presentation/providers/expenses_pro
 import 'package:spend_wise/features/expenses/domain/entities/expense.dart';
 import 'package:spend_wise/theme/app_colors.dart';
 import 'package:spend_wise/theme/app_spacing.dart';
+import 'package:spend_wise/theme/app_radius.dart';
 import 'package:spend_wise/widgets/section_header.dart';
 import 'package:spend_wise/widgets/error_state.dart';
 
@@ -33,8 +34,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       useSafeArea: true,
       showDragHandle: true,
       backgroundColor: context.colors.backgroundCard,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl.topLeft.x)),
       ),
       builder: (_) => ExpenseBottomSheet(expense: expense),
     );
@@ -45,8 +46,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildSkeletonLoader() {
     return SliverPadding(
       padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
         bottom: 80,
       ),
       sliver: SliverToBoxAdapter(
@@ -137,16 +138,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               const SliverToBoxAdapter(
-                child: SizedBox(height: 16),
+                child: SizedBox(height: AppSpacing.md),
               ),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: BudgetCard(budget: budget, spent: spent),
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: ExpenseSectionHeader(
                     title: "Recent Expenses",

@@ -10,6 +10,8 @@ class AppRadius {
 
   static final lg = BorderRadius.circular(20.0);
 
+  static final xl = BorderRadius.circular(24.0);
+
   static final full = BorderRadius.circular(100.0);
 
 }

@@ -185,15 +185,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
             PrimaryButton(
-              title: _loading ? "Creating Account..." : "Create Account",
+              title: _loading ? "Registering..." : "Register",
               height: 48,
               onPressed: _loading ? null : _register,
             ),
-            const SizedBox(height: AppSpacing.md),
-            const SectionDivider(),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
+            // const SectionDivider(),
+            // const SizedBox(height: AppSpacing.xl),
             // const OauthButtonRow(),
-            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

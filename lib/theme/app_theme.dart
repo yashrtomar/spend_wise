@@ -7,6 +7,9 @@ class AppTheme {
     brightness: Brightness.light,
 
     scaffoldBackgroundColor: lightColors.backgroundScreen,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
 
     colorScheme: const ColorScheme.light().copyWith(
       primary: lightColors.primary,
@@ -20,6 +23,9 @@ class AppTheme {
     brightness: Brightness.dark,
 
     scaffoldBackgroundColor: darkColors.backgroundScreen,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
 
     colorScheme: const ColorScheme.dark().copyWith(
       primary: darkColors.primary,

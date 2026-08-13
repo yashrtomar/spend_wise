@@ -22,10 +22,9 @@ class AuthHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          Icons.account_balance_wallet_rounded,
-          size: 64,
-          color: colors.primary,
+        Image.asset(
+          'assets/coins.png',
+          height: 64,
         ),
 
         const SizedBox(height: AppSpacing.md),
