@@ -1,6 +1,8 @@
-<div align="center">
-  <!-- PLACEHOLDER: App Logo (e.g., <img src="assets/logo.png" width="120" />) -->
-  <h1>SpendWise 💸</h1>
+<div align="start">
+  <!-- PLACEHOLDER: App Logo (e.g.,  -->
+  <img src="assets/coins_padded.png" width="120" />
+  <!-- ) -->
+  <h1>SpendWise</h1>
   <p>A beautiful, offline-first personal finance tracker built with Flutter and Supabase.</p>
 </div>
 
@@ -31,7 +33,14 @@ SpendWise is a modern personal finance application designed to help users track 
 
 <div align="center">
   <!-- Add your screenshots here side-by-side -->
-  <!-- <img src="docs/screenshot1.png" width="250" hspace="10"/> -->
+  <img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 01 13" src="https://github.com/user-attachments/assets/c436e726-37b6-430b-9263-832b87ece090" />
+  <img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 01 36" src="https://github.com/user-attachments/assets/ba9e7f33-a1c9-455a-93a3-afea4aabfde7" />
+<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 02 03" src="https://github.com/user-attachments/assets/33770574-05d8-4fdc-8f41-3aeec6474b95" />
+<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 02 37" src="https://github.com/user-attachments/assets/a4bd5f58-c50d-433c-893d-c4e14e573cc5" />
+  <img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 02 51" src="https://github.com/user-attachments/assets/72500d5b-6b0b-4fee-915b-ee0eb4f923cd" />
+<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 03 04" src="https://github.com/user-attachments/assets/ed065d79-5fba-4332-8fb2-327f16ed3433" />
+<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 17 Pro - 2026-08-15 at 20 03 13" src="https://github.com/user-attachments/assets/dcaf1e45-c0f9-49b3-b4ed-24c8d0449036" />
+
   <!-- <img src="docs/screenshot2.png" width="250" hspace="10"/> -->
   <!-- <img src="docs/screenshot3.png" width="250" hspace="10"/> -->
 </div>
