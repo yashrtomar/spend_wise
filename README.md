@@ -1,6 +1,6 @@
 <div align="start">
   <!-- PLACEHOLDER: App Logo (e.g.,  -->
-  <img src="assets/coins_padded.png" width="120" />
+  <img src="assets/coins.png" width="120" />
   <!-- ) -->
   <h1>SpendWise</h1>
   <p>A beautiful, offline-first personal finance tracker built with Flutter and Supabase.</p>
