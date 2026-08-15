@@ -33,10 +33,14 @@ SpendWise is a modern personal finance application designed to help users track 
 | Dark Mode | Light Mode |
 |:---:|:---:|
 
-| **Home Screen** <br> <img width="200" alt="Home screen in dark mode" src="https://github.com/user-attachments/assets/ec7d6c17-c08a-48e0-b02e-4fb38ee16181" /> | **Home Screen ** <br> <img width="200" alt="Home screen in light mode" src="https://github.com/user-attachments/assets/bfb79528-be1a-4887-92df-13c829697017" />|
-| **Add Expense** <img width="200" alt="Add expense bottom sheet in dark mode" src="https://github.com/user-attachments/assets/dde9d1ba-f12a-445b-b944-c35d9f134f7e" /> | **Add Expense** <br> <img width="200" alt="Add expense bottom sheet in light mode" src="https://github.com/user-attachments/assets/8f2002c7-9b15-4b9e-a9db-aaef5242b178" /> |
-| **Profile Screen** <br> <img width="200" alt="Profile and settings screen in dark mode" src="https://github.com/user-attachments/assets/6c2e8db3-696e-4730-9d0e-3fbf57d67c35" /> | **Login Screen** <br> <img width="200" alt="Profile and settings screen in dark mode" src="https://github.com/user-attachments/assets/849d2d45-40c6-449e-bd51-90abc36300d8" />|
-| **Login Screen** <br> <img width="200" alt="login screen in dark mode" src="https://github.com/user-attachments/assets/6f82103c-d83d-4fd6-8b09-574816914f4a" /> | **Login Screen** <br> <img width="200" alt="login screen in light mode" src="https://github.com/user-attachments/assets/af62f35c-bb17-4523-a9b4-dfb80cc379b0" /> |
+| **Home Screen** <br> <img width="200" alt="Home screen in dark mode" src="https://github.com/user-attachments/assets/ec7d6c17-c08a-48e0-b02e-4fb38ee16181" /> | 
+**Home Screen ** <br> <img width="200" alt="Home screen in light mode" src="https://github.com/user-attachments/assets/bfb79528-be1a-4887-92df-13c829697017" />|
+| **Add Expense** <img width="200" alt="Add expense bottom sheet in dark mode" src="https://github.com/user-attachments/assets/dde9d1ba-f12a-445b-b944-c35d9f134f7e" /> | 
+**Add Expense** <br> <img width="200" alt="Add expense bottom sheet in light mode" src="https://github.com/user-attachments/assets/8f2002c7-9b15-4b9e-a9db-aaef5242b178" /> |
+| **Profile Screen** <br> <img width="200" alt="Profile and settings screen in dark mode" src="https://github.com/user-attachments/assets/6c2e8db3-696e-4730-9d0e-3fbf57d67c35" /> | 
+**Profile Screen** <br> <img width="200" alt="Profile and settings screen in dark mode" src="https://github.com/user-attachments/assets/849d2d45-40c6-449e-bd51-90abc36300d8" />|
+| **Login Screen** <br> <img width="200" alt="login screen in dark mode" src="https://github.com/user-attachments/assets/6f82103c-d83d-4fd6-8b09-574816914f4a" /> | 
+**Login Screen** <br> <img width="200" alt="login screen in light mode" src="https://github.com/user-attachments/assets/af62f35c-bb17-4523-a9b4-dfb80cc379b0" /> |
 
 ## Architecture
 
