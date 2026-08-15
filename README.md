@@ -33,13 +33,6 @@ SpendWise is a modern personal finance application designed to help users track 
 
 <div>
   <!-- Add your screenshots here side-by-side -->
-  <img width="250" hspace="10" alt="login screen" src="https://github.com/user-attachments/assets/c436e726-37b6-430b-9263-832b87ece090" />
-  <img width="250" hspace="10" alt="register screen" src="https://github.com/user-attachments/assets/ba9e7f33-a1c9-455a-93a3-afea4aabfde7" />
-<img width="250" hspace="10" alt="home screen" src="https://github.com/user-attachments/assets/33770574-05d8-4fdc-8f41-3aeec6474b95" />
-<img width="250" hspace="10" alt="add new expense bottom sheet" src="https://github.com/user-attachments/assets/a4bd5f58-c50d-433c-893d-c4e14e573cc5" />
-  <img width="250" hspace="10" alt="all expenses screen" src="https://github.com/user-attachments/assets/72500d5b-6b0b-4fee-915b-ee0eb4f923cd" />
-<img width="250" hspace="10" alt="profile and settings screen" src="https://github.com/user-attachments/assets/ed065d79-5fba-4332-8fb2-327f16ed3433" />
-<img width="250" hspace="10" alt="category management bottom sheet" src="https://github.com/user-attachments/assets/dcaf1e45-c0f9-49b3-b4ed-24c8d0449036" />
 
   <!-- <img src="docs/screenshot2.png" width="250" hspace="10"/> -->
   <!-- <img src="docs/screenshot3.png" width="250" hspace="10"/> -->
