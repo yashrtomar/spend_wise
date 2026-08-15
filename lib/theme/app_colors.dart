@@ -43,7 +43,7 @@ class AppThemeColors {
 
 const lightColors = AppThemeColors(
   primary: Color(0xFF0062FF),
-  backgroundScreen: Color(0xFFF8FAFC), // Slate 50 for a softer, cleaner contrast
+  backgroundScreen: Color(0xFFF1F5F9), // Slate 100: slightly darker for better contrast with white cards
   backgroundCard: Color(0xFFFFFFFF),
   textPrimary: Color(0xFF000000),
   textSecondary: Color(0xFF666666),
@@ -61,8 +61,8 @@ const lightColors = AppThemeColors(
 
 const darkColors = AppThemeColors(
   primary: Color(0xFF0062FF),
-  backgroundScreen: Color(0xFF0D0D0D), // Pure black (OLED friendly, zero tint)
-  backgroundCard: Color(0xFF151922), // Bare minimum cool tint over dark gray
+  backgroundScreen: Color(0xFF0B0F19), // Slate 950: Cool dark blue-grey (matches the card temp)
+  backgroundCard: Color(0xFF151C2C), // Slate 900: Cool tinted card
   textPrimary: Color(0xFFF8FAFC),
   textSecondary: Color(0xFF94A3B8),
   textMuted: Color(0x66FFFFFF),
