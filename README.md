@@ -31,12 +31,14 @@ SpendWise is a modern personal finance application designed to help users track 
 <!-- PLACEHOLDER: Screenshots Section -->
 ## 📱 Screenshots
 
-<div>
-  <!-- Add your screenshots here side-by-side -->
-
-  <!-- <img src="docs/screenshot2.png" width="250" hspace="10"/> -->
-  <!-- <img src="docs/screenshot3.png" width="250" hspace="10"/> -->
-</div>
+<!-- Uncomment the table below and insert your GitHub CDN or local screenshot URLs -->
+<!-- 
+| Light Mode | Dark Mode |
+|:---:|:---:|
+| 🏠 **Dashboard** <br> <img src="URL_HERE" width="250"/> | 🏠 **Dashboard** <br> <img src="URL_HERE" width="250"/> |
+| ➕ **Add Expense** <br> <img src="URL_HERE" width="250"/> | ➕ **Add Expense** <br> <img src="URL_HERE" width="250"/> |
+| 🔐 **Auth Screen** <br> <img src="URL_HERE" width="250"/> | 🔐 **Auth Screen** <br> <img src="URL_HERE" width="250"/> |
+-->
 
 ## 🏗️ Architecture
 
