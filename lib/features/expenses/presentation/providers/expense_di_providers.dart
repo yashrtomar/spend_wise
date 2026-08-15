@@ -2,12 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/features/expenses/data/datasources/expense_remote_datasource.dart';
 import 'package:spend_wise/features/expenses/data/datasources/category_remote_datasource.dart';
 import 'package:spend_wise/features/expenses/data/datasources/expense_local_datasource.dart';
+import 'package:spend_wise/features/expenses/data/datasources/category_local_datasource.dart';
 import 'package:spend_wise/features/expenses/data/repositories/expense_repository_impl.dart';
 import 'package:spend_wise/features/expenses/data/repositories/category_repository_impl.dart';
 import 'package:spend_wise/features/expenses/domain/repositories/expense_repository.dart';
 import 'package:spend_wise/features/expenses/domain/repositories/category_repository.dart';
 import 'package:spend_wise/features/expenses/domain/usecases/expense_usecases.dart';
 import 'package:spend_wise/features/expenses/domain/usecases/category_usecases.dart';
+import 'package:spend_wise/features/profile/presentation/providers/profile_di_providers.dart';
 
 import 'package:spend_wise/services/sync_service.dart';
 
@@ -24,11 +26,27 @@ final expenseLocalDataSourceProvider = Provider<ExpenseLocalDataSource>((ref) {
   return ExpenseLocalDataSource();
 });
 
+final categoryLocalDataSourceProvider = Provider<CategoryLocalDataSource>((ref) {
+  return CategoryLocalDataSource();
+});
+
 // Sync Service
 final syncServiceProvider = Provider<SyncService>((ref) {
-  final local = ref.watch(expenseLocalDataSourceProvider);
-  final remote = ref.watch(expenseRemoteDataSourceProvider);
-  return SyncService(local, remote)..init();
+  final expLocal = ref.watch(expenseLocalDataSourceProvider);
+  final expRemote = ref.watch(expenseRemoteDataSourceProvider);
+  final catLocal = ref.watch(categoryLocalDataSourceProvider);
+  final catRemote = ref.watch(categoryRemoteDataSourceProvider);
+  final profLocal = ref.watch(profileLocalDataSourceProvider);
+  final profRemote = ref.watch(profileRemoteDataSourceProvider);
+  
+  return SyncService(
+    expLocal, 
+    expRemote,
+    catLocal,
+    catRemote,
+    profLocal,
+    profRemote,
+  )..init();
 });
 
 // Repositories
@@ -39,8 +57,9 @@ final expenseRepositoryProvider = Provider<ExpenseRepository>((ref) {
 });
 
 final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
-  final dataSource = ref.watch(categoryRemoteDataSourceProvider);
-  return CategoryRepositoryImpl(dataSource);
+  final remote = ref.watch(categoryRemoteDataSourceProvider);
+  final local = ref.watch(categoryLocalDataSourceProvider);
+  return CategoryRepositoryImpl(remote, local);
 });
 
 // Expense Use Cases

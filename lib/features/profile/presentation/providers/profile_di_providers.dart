@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spend_wise/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:spend_wise/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:spend_wise/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:spend_wise/features/profile/domain/repositories/profile_repository.dart';
@@ -9,10 +10,15 @@ final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((ref) 
   return ProfileRemoteDataSource();
 });
 
+final profileLocalDataSourceProvider = Provider<ProfileLocalDataSource>((ref) {
+  return ProfileLocalDataSource();
+});
+
 // Repositories
 final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
-  final dataSource = ref.watch(profileRemoteDataSourceProvider);
-  return ProfileRepositoryImpl(dataSource);
+  final remote = ref.watch(profileRemoteDataSourceProvider);
+  final local = ref.watch(profileLocalDataSourceProvider);
+  return ProfileRepositoryImpl(remote, local);
 });
 
 // Use Cases

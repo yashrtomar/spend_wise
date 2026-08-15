@@ -55,6 +55,18 @@ CREATE TABLE categories (
   sync_status $integerType
 )
 ''');
+
+    await db.execute('''
+CREATE TABLE user_profiles (
+  id $idType,
+  name $textType,
+  monthly_budget $realType,
+  preferences $textNullable,
+  created_at $textNullable,
+  updated_at $textNullable,
+  sync_status $integerType
+)
+''');
   }
 
   Future close() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spend_wise/theme/app_theme.dart';
 import 'package:spend_wise/features/auth/presentation/widgets/auth_gate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,9 +8,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load(fileName: ".env");
+
   await Supabase.initialize(
-    url: 'https://kioqyplydbfztuwdbimt.supabase.co',
-    publishableKey: 'sb_publishable_VvXFUOJCBu4EP4xzAa5Wrg_Qw5yC-22',
+    url: dotenv.env['SUPABASE_URL']!,
+    publishableKey: dotenv.env['SUPABASE_PUBLISHABLE_KEY']!,
   );
   runApp(const ProviderScope(child: MainApp()));
 }
