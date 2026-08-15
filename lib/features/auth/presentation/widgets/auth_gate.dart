@@ -5,6 +5,8 @@ import 'package:spend_wise/features/navigation/screens/main_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/features/auth/presentation/providers/auth_di_providers.dart';
 
+import 'package:spend_wise/features/expenses/presentation/providers/expense_di_providers.dart';
+
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
 
@@ -15,6 +17,8 @@ class AuthGate extends ConsumerWidget {
     return authStateAsync.when(
       data: (user) {
         if (user != null) {
+          // Initialize sync service when user logs in
+          ref.read(syncServiceProvider);
           return const MainScreen();
         }
         return const AuthSwitcher();

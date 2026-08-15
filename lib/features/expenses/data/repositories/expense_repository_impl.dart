@@ -1,23 +1,50 @@
+import 'package:spend_wise/features/expenses/data/datasources/expense_local_datasource.dart';
 import 'package:spend_wise/features/expenses/data/datasources/expense_remote_datasource.dart';
 import 'package:spend_wise/features/expenses/data/models/expense_model.dart';
 import 'package:spend_wise/features/expenses/domain/entities/expense.dart';
 import 'package:spend_wise/features/expenses/domain/entities/expense_filter.dart';
 import 'package:spend_wise/features/expenses/domain/repositories/expense_repository.dart';
+import 'package:spend_wise/utils/database_helper.dart';
+import 'package:uuid/uuid.dart';
 
 class ExpenseRepositoryImpl implements ExpenseRepository {
   final ExpenseRemoteDataSource _remoteDataSource;
+  final ExpenseLocalDataSource _localDataSource;
+  final _uuid = const Uuid();
 
-  ExpenseRepositoryImpl(this._remoteDataSource);
+  ExpenseRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   @override
   Future<Expense> addExpense(Expense expense) async {
-    final model = ExpenseModel.fromEntity(expense);
-    return await _remoteDataSource.addExpense(model);
+    // Generate UUID if offline and ID is null
+    final id = expense.id ?? _uuid.v4();
+    final expenseWithId = expense.copyWith(id: id, createdAt: expense.createdAt ?? DateTime.now(), updatedAt: expense.updatedAt ?? DateTime.now());
+    final model = ExpenseModel.fromEntity(expenseWithId);
+
+    // Save locally first
+    await _localDataSource.insertExpense(model, syncStatus: SyncStatus.pendingInsert);
+
+    // Fire and forget remote push
+    _remoteDataSource.addExpense(model).then((remoteExpense) {
+      _localDataSource.updateSyncStatus(remoteExpense.id!, SyncStatus.synced);
+    }).catchError((_) {
+      // Ignored, SyncService will handle it later
+    });
+
+    return model;
   }
 
   @override
   Future<void> deleteExpense(String id) async {
-    await _remoteDataSource.deleteExpense(id);
+    // Save locally first
+    await _localDataSource.deleteExpense(id, syncStatus: SyncStatus.pendingDelete);
+
+    // Fire and forget remote push
+    _remoteDataSource.deleteExpense(id).then((_) {
+      _localDataSource.hardDeleteExpense(id);
+    }).catchError((_) {
+      // Ignored, SyncService will handle it later
+    });
   }
 
   @override
@@ -28,7 +55,34 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     ExpenseFilter? filter,
     ExpenseSort? sort,
   }) async {
-    return await _remoteDataSource.getExpenses(
+    // Fire and forget remote fetch so UI loads instantly
+    _remoteDataSource.getExpenses(
+      limit: limit,
+      offset: offset,
+      searchQuery: searchQuery,
+      filter: filter,
+      sort: sort,
+    ).then((remoteExpenses) async {
+      final pendingUpdates = await _localDataSource.getPendingUpdates();
+      final pendingInserts = await _localDataSource.getPendingInserts();
+      final pendingDeletes = await _localDataSource.getPendingDeletes();
+      
+      final pendingIds = [
+        ...pendingUpdates.map((e) => e.id!),
+        ...pendingInserts.map((e) => e.id!),
+        ...pendingDeletes,
+      ];
+
+      for (var expense in remoteExpenses) {
+        if (!pendingIds.contains(expense.id)) {
+           await _localDataSource.insertExpense(expense, syncStatus: SyncStatus.synced);
+        }
+      }
+    }).catchError((_) {
+      // Ignore remote error
+    });
+
+    return await _localDataSource.getExpenses(
       limit: limit,
       offset: offset,
       searchQuery: searchQuery,
@@ -39,17 +93,26 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<Map<String, double>> getExpensesByCategory(DateTime startDate, DateTime endDate) async {
-    return await _remoteDataSource.getExpensesByCategory(startDate, endDate);
+    return await _localDataSource.getExpensesByCategory(startDate, endDate);
   }
 
   @override
   Future<List<Expense>> getRecentExpenses(int limit) async {
-    return await _remoteDataSource.getRecentExpenses(limit);
+    return await _localDataSource.getRecentExpenses(limit);
   }
 
   @override
   Future<void> updateExpense(Expense expense) async {
-    final model = ExpenseModel.fromEntity(expense);
-    await _remoteDataSource.updateExpense(model);
+    final expenseWithDate = expense.copyWith(updatedAt: DateTime.now());
+    final model = ExpenseModel.fromEntity(expenseWithDate);
+
+    await _localDataSource.updateExpense(model, syncStatus: SyncStatus.pendingUpdate);
+
+    // Fire and forget remote push
+    _remoteDataSource.updateExpense(model).then((_) {
+      _localDataSource.updateSyncStatus(model.id!, SyncStatus.synced);
+    }).catchError((_) {
+      // Ignored, SyncService will handle it later
+    });
   }
 }

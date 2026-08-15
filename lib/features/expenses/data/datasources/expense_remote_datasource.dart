@@ -85,9 +85,6 @@ class ExpenseRemoteDataSource {
   Future<ExpenseModel> addExpense(ExpenseModel expense) async {
     final userId = _supabase.auth.currentUser!.id;
     final data = expense.toJson();
-    data.remove('id'); // DB auto-generates ID
-    data.remove('created_at');
-    data.remove('updated_at');
     data['user_id'] = userId;
 
     final response = await _supabase
