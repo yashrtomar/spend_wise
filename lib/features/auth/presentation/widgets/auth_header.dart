@@ -31,7 +31,7 @@ class AuthHeader extends StatelessWidget {
 
         Text(
           "Spendwise",
-          style: AppTypography.xl.copyWith(
+          style: AppTypography.xxl.copyWith(
             // fontSize: 40,
             fontWeight: FontWeight.w600,
           ),
@@ -41,7 +41,7 @@ class AuthHeader extends StatelessWidget {
 
         Text(
           "Track your expenses and stay on top of your finances",
-          style: AppTypography.sm.copyWith(
+          style: AppTypography.base.copyWith(
             height: 1.4,
             color: colors.textSecondary,
           ),
