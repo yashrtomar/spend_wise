@@ -2,6 +2,7 @@ import 'package:spend_wise/features/expenses/data/models/expense_model.dart';
 import 'package:spend_wise/features/expenses/domain/entities/expense_filter.dart';
 import 'package:spend_wise/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpenseLocalDataSource {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
@@ -68,10 +69,13 @@ class ExpenseLocalDataSource {
     ExpenseFilter? filter,
     ExpenseSort? sort,
   }) async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return [];
+
     final db = await _dbHelper.database;
     
-    String where = 'sync_status != ?';
-    List<dynamic> whereArgs = [SyncStatus.pendingDelete];
+    String where = 'sync_status != ? AND user_id = ?';
+    List<dynamic> whereArgs = [SyncStatus.pendingDelete, userId];
 
     if (searchQuery != null && searchQuery.isNotEmpty) {
       where += ' AND name LIKE ?';
@@ -138,14 +142,17 @@ class ExpenseLocalDataSource {
     DateTime startDate,
     DateTime endDate,
   ) async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return {};
+
     final db = await _dbHelper.database;
     final end = endDate.add(const Duration(days: 1));
     
     final List<Map<String, dynamic>> maps = await db.query(
       'expenses',
       columns: ['category', 'SUM(amount) as total'],
-      where: 'sync_status != ? AND created_at >= ? AND created_at < ?',
-      whereArgs: [SyncStatus.pendingDelete, startDate.toIso8601String(), end.toIso8601String()],
+      where: 'sync_status != ? AND user_id = ? AND created_at >= ? AND created_at < ?',
+      whereArgs: [SyncStatus.pendingDelete, userId, startDate.toIso8601String(), end.toIso8601String()],
       groupBy: 'category',
     );
 
@@ -160,11 +167,14 @@ class ExpenseLocalDataSource {
   }
 
   Future<List<ExpenseModel>> getRecentExpenses(int limit) async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return [];
+
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'expenses',
-      where: 'sync_status != ?',
-      whereArgs: [SyncStatus.pendingDelete],
+      where: 'sync_status != ? AND user_id = ?',
+      whereArgs: [SyncStatus.pendingDelete, userId],
       orderBy: 'created_at DESC',
       limit: limit,
     );
@@ -176,20 +186,26 @@ class ExpenseLocalDataSource {
 
   // Sync helpers
   Future<List<ExpenseModel>> getPendingInserts() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return [];
     final db = await _dbHelper.database;
-    final maps = await db.query('expenses', where: 'sync_status = ?', whereArgs: [SyncStatus.pendingInsert]);
+    final maps = await db.query('expenses', where: 'sync_status = ? AND user_id = ?', whereArgs: [SyncStatus.pendingInsert, userId]);
     return maps.map((e) => ExpenseModel.fromJson(e)).toList();
   }
 
   Future<List<ExpenseModel>> getPendingUpdates() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return [];
     final db = await _dbHelper.database;
-    final maps = await db.query('expenses', where: 'sync_status = ?', whereArgs: [SyncStatus.pendingUpdate]);
+    final maps = await db.query('expenses', where: 'sync_status = ? AND user_id = ?', whereArgs: [SyncStatus.pendingUpdate, userId]);
     return maps.map((e) => ExpenseModel.fromJson(e)).toList();
   }
 
   Future<List<String>> getPendingDeletes() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return [];
     final db = await _dbHelper.database;
-    final maps = await db.query('expenses', columns: ['id'], where: 'sync_status = ?', whereArgs: [SyncStatus.pendingDelete]);
+    final maps = await db.query('expenses', columns: ['id'], where: 'sync_status = ? AND user_id = ?', whereArgs: [SyncStatus.pendingDelete, userId]);
     return maps.map((e) => e['id'] as String).toList();
   }
   

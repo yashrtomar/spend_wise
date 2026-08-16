@@ -6,6 +6,7 @@ import 'package:spend_wise/features/expenses/domain/entities/expense_filter.dart
 import 'package:spend_wise/features/expenses/domain/repositories/expense_repository.dart';
 import 'package:spend_wise/utils/database_helper.dart';
 import 'package:uuid/uuid.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpenseRepositoryImpl implements ExpenseRepository {
   final ExpenseRemoteDataSource _remoteDataSource;
@@ -18,7 +19,14 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   Future<Expense> addExpense(Expense expense) async {
     // Generate UUID if offline and ID is null
     final id = expense.id ?? _uuid.v4();
-    final expenseWithId = expense.copyWith(id: id, createdAt: expense.createdAt ?? DateTime.now(), updatedAt: expense.updatedAt ?? DateTime.now());
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    
+    final expenseWithId = expense.copyWith(
+      id: id, 
+      userId: expense.userId ?? userId,
+      createdAt: expense.createdAt ?? DateTime.now(), 
+      updatedAt: expense.updatedAt ?? DateTime.now()
+    );
     final model = ExpenseModel.fromEntity(expenseWithId);
 
     // Save locally first

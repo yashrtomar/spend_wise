@@ -57,12 +57,30 @@ class CategoryLocalDataSource {
 
   Future<void> deleteCategory(String id) async {
     final db = await _dbHelper.database;
+    
+    // Get category name first to reassign expenses
+    final cats = await db.query('categories', columns: ['name'], where: 'id = ?', whereArgs: [id]);
+    String? catName;
+    if (cats.isNotEmpty) {
+      catName = cats.first['name'] as String?;
+    }
+    
     await db.update(
       'categories',
       {'sync_status': SyncStatus.pendingDelete},
       where: 'id = ?',
       whereArgs: [id],
     );
+    
+    if (catName != null) {
+      // Move expenses locally
+      await db.update(
+        'expenses',
+        {'category': 'Other'},
+        where: 'category = ?',
+        whereArgs: [catName],
+      );
+    }
   }
   
   Future<void> hardDeleteCategory(String id) async {
