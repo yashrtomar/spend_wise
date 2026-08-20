@@ -19,8 +19,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
   }
 
@@ -67,6 +68,28 @@ CREATE TABLE user_profiles (
   sync_status $integerType
 )
 ''');
+  }
+
+  Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    const idType = 'TEXT PRIMARY KEY';
+    const textType = 'TEXT NOT NULL';
+    const textNullable = 'TEXT';
+    const realType = 'REAL NOT NULL';
+    const integerType = 'INTEGER NOT NULL';
+
+    if (oldVersion < 2) {
+      await db.execute('''
+CREATE TABLE user_profiles (
+  id $idType,
+  name $textType,
+  monthly_budget $realType,
+  preferences $textNullable,
+  created_at $textNullable,
+  updated_at $textNullable,
+  sync_status $integerType
+)
+''');
+    }
   }
 
   Future close() async {
