@@ -14,9 +14,7 @@ class UserProfileModel extends UserProfile {
       id: json['id'] as String,
       name: json['name'] as String,
       monthlyBudget: (json['monthly_budget'] as num).toDouble(),
-      preferences: Map<String, dynamic>.from(
-        json['preferences'] as Map,
-      ),
+      preferences: Map<String, dynamic>.from(json['preferences'] as Map? ?? {}),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
   }

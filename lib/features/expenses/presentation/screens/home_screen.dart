@@ -1,3 +1,6 @@
+import 'package:spend_wise/services/sync_providers.dart';
+import 'package:spend_wise/services/sync_service.dart';
+import 'package:spend_wise/widgets/sync_status.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/features/expenses/presentation/screens/all_expenses_screen.dart';
@@ -35,7 +38,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       showDragHandle: true,
       backgroundColor: context.colors.backgroundCard,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl.topLeft.x)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.xl.topLeft.x),
+        ),
       ),
       builder: (_) => ExpenseBottomSheet(expense: expense),
     );
@@ -78,8 +83,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: ErrorState(
-        message: 'Failed to load data: $error',
+        message: error is FirstSyncException
+            ? error.toString()
+            : 'Could not load your saved data. Please try again.',
         onRetry: () {
+          ref.read(syncServiceProvider.notifier).syncNow();
           ref.invalidate(expensesProvider);
           ref.invalidate(paginatedExpensesProvider);
           ref.invalidate(categoriesProvider);
@@ -100,11 +108,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final hasExpenses = expenses.isNotEmpty;
 
     final budget = profileAsync.value?.monthlyBudget ?? 0.0;
-    
+
     final now = DateTime.now();
     final currentMonthExpenses = expenses.where((expense) {
       if (expense.createdAt == null) return false;
-      return expense.createdAt!.year == now.year && expense.createdAt!.month == now.month;
+      return expense.createdAt!.year == now.year &&
+          expense.createdAt!.month == now.month;
     });
 
     final spent = currentMonthExpenses.fold<double>(
@@ -117,33 +126,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           color: colors.primary,
-          onRefresh: () async {
-            ref.invalidate(expensesProvider);
-            ref.invalidate(paginatedExpensesProvider);
-            ref.invalidate(categoriesProvider);
-            try {
-              await Future.wait([
-                ref.read(expensesProvider.future),
-                ref.read(categoriesProvider.future),
-                ref.read(profileProvider.future),
-              ]);
-            } catch (_) {}
-          },
+          onRefresh: () => ref.read(syncServiceProvider.notifier).syncNow(),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(
-                child: GreetHeader(
-                  name: userName,
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.md),
-              ),
+              const SliverToBoxAdapter(child: SyncStatusBanner()),
+              SliverToBoxAdapter(child: GreetHeader(name: userName)),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
-                  child: BudgetCard(budget: budget, spent: spent),
+                  child: Skeletonizer(
+                    enabled:
+                        (expensesAsync.isLoading && !expensesAsync.hasValue) ||
+                        (profileAsync.isLoading && !profileAsync.hasValue),
+                    child: BudgetCard(budget: budget, spent: spent),
+                  ),
                 ),
               ),
               SliverPadding(
@@ -165,9 +163,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("View All", style: TextStyle(color: colors.primary)),
+                                Text(
+                                  "View All",
+                                  style: TextStyle(color: colors.primary),
+                                ),
                                 const SizedBox(width: 4),
-                                FaIcon(FontAwesomeIcons.chevronRight, size: 10, color: colors.primary),
+                                FaIcon(
+                                  FontAwesomeIcons.chevronRight,
+                                  size: 10,
+                                  color: colors.primary,
+                                ),
                               ],
                             ),
                           )
@@ -178,13 +183,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               expensesAsync.when(
                 skipLoadingOnReload: true,
                 data: (expensesList) {
-                  if (categoriesAsync.isLoading || profileAsync.isLoading) {
+                  if ((categoriesAsync.isLoading &&
+                          !categoriesAsync.hasValue) ||
+                      (profileAsync.isLoading && !profileAsync.hasValue)) {
                     return _buildSkeletonLoader();
                   }
-                  if (categoriesAsync.hasError) {
+                  if (categoriesAsync.hasError && expensesList.isEmpty) {
                     return _buildErrorState(categoriesAsync.error!);
                   }
-                  if (profileAsync.hasError) {
+                  if (profileAsync.hasError && expensesList.isEmpty) {
                     return _buildErrorState(profileAsync.error!);
                   }
                   return ExpenseList(

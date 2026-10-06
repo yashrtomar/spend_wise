@@ -1,21 +1,19 @@
-import 'package:spend_wise/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'dart:async';
+import 'package:spend_wise/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:spend_wise/features/profile/data/models/user_profile_model.dart';
 import 'package:spend_wise/features/profile/domain/entities/user_profile.dart';
 import 'package:spend_wise/features/profile/domain/repositories/profile_repository.dart';
+import 'package:spend_wise/services/sync_service.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
-  final ProfileRemoteDataSource _remoteDataSource;
-
-  ProfileRepositoryImpl(this._remoteDataSource);
-
+  final ProfileLocalDataSource _local;
+  final SyncService _sync;
+  ProfileRepositoryImpl(this._local, this._sync);
   @override
-  Future<UserProfile?> getProfile() async {
-    return await _remoteDataSource.getProfile();
-  }
-
+  Future<UserProfile?> getProfile() => _local.getProfile();
   @override
   Future<void> updateProfile(UserProfile profile) async {
-    final model = UserProfileModel.fromEntity(profile);
-    await _remoteDataSource.updateProfile(model);
+    await _local.updateProfile(UserProfileModel.fromEntity(profile));
+    unawaited(_sync.syncNow());
   }
 }

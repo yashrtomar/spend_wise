@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spend_wise/features/expenses/data/datasources/expense_remote_datasource.dart';
-import 'package:spend_wise/features/expenses/data/datasources/category_remote_datasource.dart';
 import 'package:spend_wise/features/expenses/data/datasources/expense_local_datasource.dart';
+import 'package:spend_wise/features/expenses/data/datasources/category_local_datasource.dart';
 import 'package:spend_wise/features/expenses/data/repositories/expense_repository_impl.dart';
 import 'package:spend_wise/features/expenses/data/repositories/category_repository_impl.dart';
 import 'package:spend_wise/features/expenses/domain/repositories/expense_repository.dart';
@@ -9,38 +8,30 @@ import 'package:spend_wise/features/expenses/domain/repositories/category_reposi
 import 'package:spend_wise/features/expenses/domain/usecases/expense_usecases.dart';
 import 'package:spend_wise/features/expenses/domain/usecases/category_usecases.dart';
 
-import 'package:spend_wise/services/sync_service.dart';
+import 'package:spend_wise/services/sync_providers.dart';
 
 // Data Sources
-final expenseRemoteDataSourceProvider = Provider<ExpenseRemoteDataSource>((ref) {
-  return ExpenseRemoteDataSource();
-});
-
-final categoryRemoteDataSourceProvider = Provider<CategoryRemoteDataSource>((ref) {
-  return CategoryRemoteDataSource();
-});
-
 final expenseLocalDataSourceProvider = Provider<ExpenseLocalDataSource>((ref) {
-  return ExpenseLocalDataSource();
+  return ExpenseLocalDataSource(ref.watch(syncStoreProvider));
 });
 
-// Sync Service
-final syncServiceProvider = Provider<SyncService>((ref) {
-  final local = ref.watch(expenseLocalDataSourceProvider);
-  final remote = ref.watch(expenseRemoteDataSourceProvider);
-  return SyncService(local, remote)..init();
+final categoryLocalDataSourceProvider = Provider<CategoryLocalDataSource>((
+  ref,
+) {
+  return CategoryLocalDataSource(ref.watch(syncStoreProvider));
 });
 
 // Repositories
 final expenseRepositoryProvider = Provider<ExpenseRepository>((ref) {
-  final remoteDataSource = ref.watch(expenseRemoteDataSourceProvider);
+  final sync = ref.watch(syncServiceProvider.notifier);
   final localDataSource = ref.watch(expenseLocalDataSourceProvider);
-  return ExpenseRepositoryImpl(remoteDataSource, localDataSource);
+  return ExpenseRepositoryImpl(localDataSource, sync);
 });
 
 final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
-  final dataSource = ref.watch(categoryRemoteDataSourceProvider);
-  return CategoryRepositoryImpl(dataSource);
+  final sync = ref.watch(syncServiceProvider.notifier);
+  final local = ref.watch(categoryLocalDataSourceProvider);
+  return CategoryRepositoryImpl(local, sync);
 });
 
 // Expense Use Cases
@@ -56,10 +47,13 @@ final updateExpenseUseCaseProvider = Provider<UpdateExpenseUseCase>((ref) {
 final deleteExpenseUseCaseProvider = Provider<DeleteExpenseUseCase>((ref) {
   return DeleteExpenseUseCase(ref.watch(expenseRepositoryProvider));
 });
-final getExpensesByCategoryUseCaseProvider = Provider<GetExpensesByCategoryUseCase>((ref) {
-  return GetExpensesByCategoryUseCase(ref.watch(expenseRepositoryProvider));
-});
-final getRecentExpensesUseCaseProvider = Provider<GetRecentExpensesUseCase>((ref) {
+final getExpensesByCategoryUseCaseProvider =
+    Provider<GetExpensesByCategoryUseCase>((ref) {
+      return GetExpensesByCategoryUseCase(ref.watch(expenseRepositoryProvider));
+    });
+final getRecentExpensesUseCaseProvider = Provider<GetRecentExpensesUseCase>((
+  ref,
+) {
   return GetRecentExpensesUseCase(ref.watch(expenseRepositoryProvider));
 });
 
@@ -76,6 +70,9 @@ final updateCategoryUseCaseProvider = Provider<UpdateCategoryUseCase>((ref) {
 final deleteCategoryUseCaseProvider = Provider<DeleteCategoryUseCase>((ref) {
   return DeleteCategoryUseCase(ref.watch(categoryRepositoryProvider));
 });
-final deleteCategoryAndMoveExpensesUseCaseProvider = Provider<DeleteCategoryAndMoveExpensesUseCase>((ref) {
-  return DeleteCategoryAndMoveExpensesUseCase(ref.watch(categoryRepositoryProvider));
-});
+final deleteCategoryAndMoveExpensesUseCaseProvider =
+    Provider<DeleteCategoryAndMoveExpensesUseCase>((ref) {
+      return DeleteCategoryAndMoveExpensesUseCase(
+        ref.watch(categoryRepositoryProvider),
+      );
+    });

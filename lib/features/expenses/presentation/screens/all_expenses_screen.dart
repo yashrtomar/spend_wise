@@ -1,3 +1,6 @@
+import 'package:spend_wise/services/sync_providers.dart';
+import 'package:spend_wise/services/sync_service.dart';
+import 'package:spend_wise/widgets/sync_status.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,8 +117,11 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: ErrorState(
-        message: 'Failed to load expenses: $error',
+        message: error is FirstSyncException
+            ? error.toString()
+            : 'Could not load your saved expenses. Please try again.',
         onRetry: () {
+          ref.read(syncServiceProvider.notifier).syncNow();
           ref.invalidate(paginatedExpensesProvider);
           ref.invalidate(categoriesProvider);
         },
@@ -177,28 +183,20 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
       ),
       body: RefreshIndicator(
         color: colors.primary,
-        onRefresh: () async {
-          ref.invalidate(paginatedExpensesProvider);
-          ref.invalidate(categoriesProvider);
-          try {
-            await Future.wait([
-              ref.read(paginatedExpensesProvider.future),
-              ref.read(categoriesProvider.future),
-            ]);
-          } catch (_) {}
-        },
+        onRefresh: () => ref.read(syncServiceProvider.notifier).syncNow(),
         child: CustomScrollView(
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
+            const SliverToBoxAdapter(child: SyncStatusBanner()),
             const SliverToBoxAdapter(child: SizedBox(height: 8)),
             expensesAsync.when(
               skipLoadingOnReload: true,
               data: (expensesList) {
-                if (categoriesAsync.isLoading) {
+                if (categoriesAsync.isLoading && !categoriesAsync.hasValue) {
                   return _buildSkeletonLoader();
                 }
-                if (categoriesAsync.hasError) {
+                if (categoriesAsync.hasError && expensesList.isEmpty) {
                   return _buildErrorState(categoriesAsync.error!);
                 }
                 return ExpenseList(
@@ -243,7 +241,11 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
     );
   }
 
-  Widget _buildFilterButton(BuildContext context, WidgetRef ref, AppThemeColors colors) {
+  Widget _buildFilterButton(
+    BuildContext context,
+    WidgetRef ref,
+    AppThemeColors colors,
+  ) {
     final filter = ref.watch(expenseFilterProvider);
     final isActive = !filter.isEmpty;
 
@@ -265,7 +267,9 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
             color: isActive ? colors.primary : colors.textPrimary,
           ),
           style: IconButton.styleFrom(
-            backgroundColor: isActive ? colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+            backgroundColor: isActive
+                ? colors.primary.withValues(alpha: 0.1)
+                : Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -289,7 +293,11 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
     );
   }
 
-  Widget _buildSortButton(BuildContext context, WidgetRef ref, AppThemeColors colors) {
+  Widget _buildSortButton(
+    BuildContext context,
+    WidgetRef ref,
+    AppThemeColors colors,
+  ) {
     final sort = ref.watch(expenseSortProvider);
     final isActive = sort != ExpenseSort.newest;
 
@@ -311,10 +319,14 @@ class _AllExpensesScreenState extends ConsumerState<AllExpensesScreen> {
             color: isActive ? colors.primary : colors.textPrimary,
           ),
           style: IconButton.styleFrom(
-            backgroundColor: isActive ? colors.primary.withValues(alpha: 0.1) : colors.backgroundCard,
+            backgroundColor: isActive
+                ? colors.primary.withValues(alpha: 0.1)
+                : colors.backgroundCard,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: isActive ? colors.primary : colors.border),
+              side: BorderSide(
+                color: isActive ? colors.primary : colors.border,
+              ),
             ),
             padding: const EdgeInsets.all(12),
           ),

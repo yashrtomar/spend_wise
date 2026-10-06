@@ -1,3 +1,4 @@
+import 'package:spend_wise/widgets/sync_status.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_wise/features/auth/presentation/providers/auth_di_providers.dart';
@@ -66,17 +67,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
+            const SyncStatusBanner(),
             // User Avatar & Info (Horizontal Layout)
-            UserProfileHeader(
-              name: name,
-              email: email,
-            ),
+            UserProfileHeader(name: name, email: email),
 
             const SizedBox(height: 36),
 
@@ -91,8 +87,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   trailingText: budget.toStringAsFixed(0),
                   onTap: () {
                     showDialog(
+                      useRootNavigator: false,
                       context: context,
-                      builder: (context) => UpdateBudgetDialog(currentBudget: budget),
+                      builder: (context) =>
+                          UpdateBudgetDialog(currentBudget: budget),
                     );
                   },
                 ),
@@ -108,7 +106,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       showDragHandle: true,
                       backgroundColor: colors.backgroundCard,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
                       ),
                       builder: (_) => const ManageCategoriesBottomSheet(),
                     );

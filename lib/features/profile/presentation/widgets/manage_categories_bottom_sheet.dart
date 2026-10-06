@@ -41,9 +41,7 @@ class _ManageCategoriesBottomSheetState
     setState(() => _isAdding = true);
     try {
       final addUseCase = ref.read(addCategoryUseCaseProvider);
-      await addUseCase.execute(
-        Category(name: name, createdAt: DateTime.now()),
-      );
+      await addUseCase.execute(Category(name: name, createdAt: DateTime.now()));
       _addController.clear();
       ref.invalidate(categoriesProvider);
       await ref.read(categoriesProvider.future);
@@ -204,7 +202,8 @@ class _ManageCategoriesBottomSheetState
                                       ),
                               ),
                               if (!isEditing) ...[
-                                if (category.name.trim().toLowerCase() != 'other') ...[
+                                if (category.name.trim().toLowerCase() !=
+                                    'other') ...[
                                   IconButton(
                                     onPressed: () {
                                       _editController.text = category.name;
@@ -220,8 +219,12 @@ class _ManageCategoriesBottomSheetState
                                   ),
                                   IconButton(
                                     onPressed: () => showDialog(
+                                      useRootNavigator: false,
                                       context: context,
-                                      builder: (context) => DeleteCategoryDialog(category: category),
+                                      builder: (context) =>
+                                          DeleteCategoryDialog(
+                                            category: category,
+                                          ),
                                     ),
                                     icon: FaIcon(
                                       FontAwesomeIcons.trash,
@@ -235,7 +238,9 @@ class _ManageCategoriesBottomSheetState
                                     onPressed: null,
                                     icon: FaIcon(
                                       FontAwesomeIcons.lock,
-                                      color: colors.textMuted.withValues(alpha: 0.3),
+                                      color: colors.textMuted.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       size: 16,
                                     ),
                                   ),

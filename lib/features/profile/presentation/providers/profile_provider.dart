@@ -1,3 +1,4 @@
+import 'package:spend_wise/services/sync_providers.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spend_wise/features/profile/domain/entities/user_profile.dart';
@@ -11,6 +12,8 @@ class ProfileNotifier extends AsyncNotifier<UserProfile?> {
   @override
   FutureOr<UserProfile?> build() async {
     final getProfileUseCase = ref.watch(getProfileUseCaseProvider);
+    final sync = ref.watch(syncServiceProvider.notifier);
+    await sync.readyForRead();
     return getProfileUseCase.execute();
   }
 
